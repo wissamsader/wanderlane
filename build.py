@@ -463,9 +463,32 @@ def build_home():
            + '<section class="sec"><div class="wrap"><div class="sec-head center"><div class="kicker">Pick a city</div>'
            + '<h2>Where are you going?</h2><p class="muted">Every guide is built from real places we\'ve walked into — not a scraped list.</p></div>'
            + f'<div class="city-grid">{cards}</div></div></section>'
+           + home_popular()
            + home_manifesto()
            + footer())
     write("", doc)
+
+POPULAR = ["where-to-eat-in-chiang-mai", "3-days-in-barcelona", "where-to-eat-in-berlin",
+           "chiang-mai-scooter-rental", "where-to-eat-in-palermo", "da-nang-hoi-an-itinerary"]
+
+def home_popular():
+    cards = ""
+    for slug in POPULAR:
+        p = PAGE_INDEX.get(slug)
+        if not p:
+            continue
+        c = city_by_id(p["city"])
+        thumb = f'/assets/og-{p["city"]}.png'
+        cards += (f'<a class="guide-card" href="/{p["city"]}/{p["slug"]}/">'
+                  f'<img src="{thumb}" alt="{esc(p["title"])}" loading="lazy">'
+                  f'<div class="gc-body"><span class="card-tag">{esc(c["name"])}</span>'
+                  f'<h3>{esc(p["title"])}</h3><p>{esc(p.get("dek","")[:88])}</p></div></a>')
+    if not cards:
+        return ""
+    return ('<section class="sec"><div class="wrap">'
+            '<div class="sec-head center"><div class="kicker">Reader favourites</div>'
+            '<h2>Popular guides</h2></div>'
+            f'<div class="guide-list">{cards}</div></div></section>')
 
 def home_manifesto():
     return ('<section class="sec sec-alt"><div class="wrap"><div class="prose center" style="margin-inline:auto">'
