@@ -1,0 +1,45 @@
+WANDERLANE PINS — titles for upload
+
+pin-home.png
+  The good streets, found.
+  WANDERLANE
+
+pin-chiangmai-eat.png
+  Where to Eat in Chiang Mai
+  CHIANG MAI · FOOD
+
+pin-chiangmai-stay.png
+  Where to Stay in Chiang Mai
+  CHIANG MAI
+
+pin-chiangmai-scooter.png
+  Renting a Scooter in Chiang Mai
+  CHIANG MAI
+
+pin-chiangmai-do.png
+  The Best Things to Do in Chiang Mai
+  CHIANG MAI
+
+pin-berlin-eat.png
+  The Best Arab Food in Berlin
+  BERLIN · SONNENALLEE
+
+pin-palermo-eat.png
+  Where to Eat in Palermo
+  PALERMO · STREET FOOD
+
+pin-barcelona-eat.png
+  Where to Eat in Barcelona Like a Local
+  BARCELONA
+
+pin-beirut-eat.png
+  Where to Eat in Beirut
+  BEIRUT · FOOD
+
+pin-vietnam-eat.png
+  Where to Eat in Da Nang
+  DA NANG · FOOD
+
+pin-damascus.png
+  The Tables of Damascus
+  DAMASCUS

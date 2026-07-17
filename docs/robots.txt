@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://wissamsader.github.io/wanderlane/sitemap.xml
