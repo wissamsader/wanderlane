@@ -20,25 +20,65 @@ pin-chiangmai-do.png
   The Best Things to Do in Chiang Mai
   CHIANG MAI
 
+pin-chiangmai-nomad.png
+  The Chiang Mai Digital Nomad Guide
+  CHIANG MAI · NOMAD
+
+pin-chiangmai-bkk.png
+  Bangkok to Chiang Mai: Every Option
+  THAILAND
+
 pin-berlin-eat.png
   The Best Arab Food in Berlin
   BERLIN · SONNENALLEE
+
+pin-berlin-stay.png
+  Where to Stay in Berlin
+  BERLIN
+
+pin-berlin-itin.png
+  3 Perfect Days in Berlin
+  BERLIN · ITINERARY
 
 pin-palermo-eat.png
   Where to Eat in Palermo
   PALERMO · STREET FOOD
 
+pin-palermo-stay.png
+  Where to Stay in Palermo
+  PALERMO
+
+pin-palermo-itin.png
+  3 Perfect Days in Palermo
+  PALERMO · ITINERARY
+
 pin-barcelona-eat.png
   Where to Eat in Barcelona Like a Local
   BARCELONA
+
+pin-barcelona-stay.png
+  Where to Stay in Barcelona
+  BARCELONA
+
+pin-barcelona-itin.png
+  3 Perfect Days in Barcelona
+  BARCELONA · ITINERARY
 
 pin-beirut-eat.png
   Where to Eat in Beirut
   BEIRUT · FOOD
 
+pin-beirut-stay.png
+  Where to Stay in Beirut
+  BEIRUT
+
 pin-vietnam-eat.png
   Where to Eat in Da Nang
   DA NANG · FOOD
+
+pin-vietnam-itin.png
+  Da Nang & Hoi An: 4-Day Itinerary
+  VIETNAM · ITINERARY
 
 pin-damascus.png
   The Tables of Damascus

@@ -16,6 +16,10 @@ BASE_URL = "https://wissamsader.github.io/wanderlane"   # -> https://wanderlane.
 BASE_PATH = "/wanderlane"   # GitHub Pages project subpath. Set to "" when a custom domain serves at root.
 
 CONTACT = "hello@wanderlane.co"        # create this inbox (or point to your own)
+
+# Optional, paste-and-rebuild (see ops/ROADMAP.md):
+ANALYTICS = ""       # a privacy-friendly analytics <script> (Plausible/GoatCounter) — injected into every page
+GSC_VERIFY = ""      # Google Search Console verification token -> <meta google-site-verification> for indexing
 SOCIAL = {
     "pinterest": "https://www.pinterest.com/wanderlaneguides/",   # create (see ops/PINTEREST.md)
     "instagram": "https://www.instagram.com/wanderlane.guides/",
@@ -41,19 +45,19 @@ AFF = {
     },
     "agoda": {
         "dest": "https://www.agoda.com/search?city={q}",
-        "tp": {"sub": None, "promo_id": None},        # fill promo_id from TP builder
+        "tp": {"sub": "c104", "promo_id": "2854"},    # verified public promo_id
         "direct_param": "cid", "direct_id": "",
         "label": "Check prices on Agoda", "qspace": "%20",
     },
     "hostelworld": {
         "dest": "https://www.hostelworld.com/s?q={q}",
-        "tp": {"sub": None, "promo_id": None},
+        "tp": {"sub": "c93", "promo_id": "3518"},     # verified public promo_id
         "direct_param": "clickref", "direct_id": "",
         "label": "Find hostels", "qspace": "+",
     },
     "gyg": {   # GetYourGuide
         "dest": "https://www.getyourguide.com/s/?q={q}",
-        "tp": {"sub": None, "promo_id": None},
+        "tp": {"sub": "c108", "promo_id": "3965"},    # verified public promo_id
         "direct_param": "partner_id", "direct_id": "",
         "label": "See tours on GetYourGuide", "qspace": "+",
     },

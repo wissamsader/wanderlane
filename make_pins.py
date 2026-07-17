@@ -25,15 +25,32 @@ def biz_photo(city, slug):
 # pin defs: (file, kicker, title, accent, photo(city,slug) or None)
 PINSET = [
  ("pin-home",           "WANDERLANE",              "The good streets, found.",            "#1F4D3F", None),
+ # Chiang Mai (gradient — no owned photos)
  ("pin-chiangmai-eat",  "CHIANG MAI · FOOD",       "Where to Eat in Chiang Mai",          "#A85D2A", None),
  ("pin-chiangmai-stay", "CHIANG MAI",              "Where to Stay in Chiang Mai",         "#A85D2A", None),
  ("pin-chiangmai-scooter","CHIANG MAI",            "Renting a Scooter in Chiang Mai",     "#A85D2A", None),
  ("pin-chiangmai-do",   "CHIANG MAI",              "The Best Things to Do in Chiang Mai", "#A85D2A", None),
+ ("pin-chiangmai-nomad","CHIANG MAI · NOMAD",      "The Chiang Mai Digital Nomad Guide",  "#A85D2A", None),
+ ("pin-chiangmai-bkk",  "THAILAND",                "Bangkok to Chiang Mai: Every Option", "#A85D2A", None),
+ # Berlin
  ("pin-berlin-eat",     "BERLIN · SONNENALLEE",    "The Best Arab Food in Berlin",        "#3B4A54", ("berlin","azzam-restaurant")),
+ ("pin-berlin-stay",    "BERLIN",                  "Where to Stay in Berlin",             "#3B4A54", ("berlin","azzam-restaurant")),
+ ("pin-berlin-itin",    "BERLIN · ITINERARY",      "3 Perfect Days in Berlin",            "#3B4A54", ("berlin","azzam-restaurant")),
+ # Palermo
  ("pin-palermo-eat",    "PALERMO · STREET FOOD",   "Where to Eat in Palermo",             "#245C7A", ("palermo","osteria-mercede")),
+ ("pin-palermo-stay",   "PALERMO",                 "Where to Stay in Palermo",            "#245C7A", ("palermo","osteria-mercede")),
+ ("pin-palermo-itin",   "PALERMO · ITINERARY",     "3 Perfect Days in Palermo",           "#245C7A", ("palermo","osteria-mercede")),
+ # Barcelona
  ("pin-barcelona-eat",  "BARCELONA",               "Where to Eat in Barcelona Like a Local","#A5302A", ("barcelona","bar-marsella")),
+ ("pin-barcelona-stay", "BARCELONA",               "Where to Stay in Barcelona",          "#A5302A", ("barcelona","bar-marsella")),
+ ("pin-barcelona-itin", "BARCELONA · ITINERARY",   "3 Perfect Days in Barcelona",         "#A5302A", ("barcelona","bar-marsella")),
+ # Beirut
  ("pin-beirut-eat",     "BEIRUT · FOOD",           "Where to Eat in Beirut",              "#1E6A73", ("beirut","lmatbakh")),
+ ("pin-beirut-stay",    "BEIRUT",                  "Where to Stay in Beirut",             "#1E6A73", ("beirut","lmatbakh")),
+ # Da Nang & Hoi An
  ("pin-vietnam-eat",    "DA NANG · FOOD",          "Where to Eat in Da Nang",             "#15795A", ("vietnam","banh-xeo-ba-duong")),
+ ("pin-vietnam-itin",   "VIETNAM · ITINERARY",     "Da Nang & Hoi An: 4-Day Itinerary",   "#15795A", ("vietnam","banh-xeo-ba-duong")),
+ # Damascus
  ("pin-damascus",       "DAMASCUS",                "The Tables of Damascus",              "#6E5A34", ("damascus","bakdash")),
 ]
 

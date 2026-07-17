@@ -10,6 +10,10 @@ Add a city/article: drop a dict into content/*.py -> rebuild -> push.
 """
 import os, re, shutil, html, importlib.util, datetime, glob, urllib.parse
 from config import BRAND, BASE_URL, TAGLINE, CITIES, AFF, SOCIAL, CONTACT, TP_MARKER, USE_TP, BASE_PATH
+try:
+    from config import ANALYTICS, GSC_VERIFY
+except ImportError:
+    ANALYTICS, GSC_VERIFY = "", ""
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.join(ROOT, "docs")   # GitHub Pages serves /docs at the repo subpath
@@ -66,6 +70,22 @@ def aff_button(program, target=None, query=None, label=None, style="btn-book", s
     cls = "btn " + style + (" btn-sm" if small else "")
     return (f'<a class="{cls}" href="{esc(href)}" target="_blank" '
             f'rel="sponsored nofollow noopener">{esc(lab)} <span class="arr">→</span></a>')
+
+ESIM_COUNTRY = {"chiangmai": "thailand", "beirut": "lebanon", "barcelona": "spain",
+                "palermo": "italy", "berlin": "germany", "vietnam": "vietnam"}
+
+def essentials_block(city):
+    """Universal 'before you go' money surface: eSIM + insurance. Skipped for Damascus (sensitive)."""
+    if not city or city["id"] == "damascus":
+        return ""
+    ctry = ESIM_COUNTRY.get(city["id"], "")
+    esim = aff_button("airalo", query=ctry, label=f'Get a {city["name"]} eSIM', style="btn-book")
+    ins = aff_button("safetywing", label="Compare travel insurance", style="btn-forest")
+    return ('<div class="callout" style="margin-top:44px">'
+            '<div class="c-head">&#9992; Two things worth sorting before you go</div>'
+            '<p>Land already connected with an <strong>eSIM</strong> instead of hunting for a SIM at the airport, '
+            'and don\'t travel uninsured — one medical bill abroad costs many times the premium.</p>'
+            f'<p style="display:flex;gap:12px;flex-wrap:wrap;margin:.2em 0 0">{esim}{ins}</p></div>')
 
 # ---------- business photo bridge (our own owned photos) --------------
 def eat_photo(city_id, slug):
@@ -133,7 +153,9 @@ def head(title, desc, path, image=None, jsonld=None, article=False):
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/wanderlane.css">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+{('<meta name="google-site-verification" content="' + GSC_VERIFY + '">') if GSC_VERIFY else ''}
 {ld}
+{ANALYTICS}
 </head>
 <body>
 """
@@ -361,12 +383,12 @@ def build_article(page):
           "mainEntityOfPage": wl_url(path)}
     graph = {"@context": "https://schema.org", "@graph": [ld] + ([faq_ld] if faq_ld else [])}
     doc = (head(f'{page["title"]} | {BRAND}', page.get("description", page.get("dek", "")), path,
-                image=page.get("hero"), jsonld=graph, article=True)
+                image=page.get("hero") or f"/assets/og-{page['city']}.png", jsonld=graph, article=True)
            + header(active=page["city"]) + disclosure_strip() + hero(page, city)
            + crumb
            + '<div class="article"><div class="wrap"><div class="article-grid">'
            + toc_html
-           + f'<article class="prose">{body}{faq_html}{rel_html}</article>'
+           + f'<article class="prose">{body}{faq_html}{essentials_block(city)}{rel_html}</article>'
            + '</div></div></div>'
            + footer())
     write(path, doc)
@@ -407,10 +429,12 @@ def build_hub(city):
     graph = {"@context": "https://schema.org", "@graph": [coll] + ([faq_ld] if faq_ld else [])}
     crumb = (f'<div class="crumb wrap"><a href="/">Home</a><span class="sep">/</span>{esc(city["name"])}</div>')
     doc = (head(f'{city["name"]} Travel Guide: Where to Eat, Stay & What to Do | {BRAND}',
-                city.get("dek", ""), path, image=city.get("hero"), jsonld=graph)
+                city.get("dek", ""), path, image=city.get("hero") or f"/assets/og-{city['id']}.png", jsonld=graph)
            + header(active=city["id"]) + disclosure_strip() + hero(hub_page, city) + crumb
            + f'<section class="sec"><div class="wrap"><div class="prose" style="max-width:920px;margin-inline:auto">{intro}</div></div></section>'
-           + deeper + faq_html + footer())
+           + deeper + faq_html
+           + (f'<section class="sec"><div class="wrap"><div class="prose" style="max-width:920px;margin-inline:auto">{essentials_block(city)}</div></div></section>' if essentials_block(city) else "")
+           + footer())
     write(path, doc)
 
 def build_home():
@@ -466,7 +490,8 @@ def build_simple(slug, title, desc, body_html):
 # ---------------------------------------------------------------- io
 def write(path, doc):
     if BASE_PATH:   # prefix root-absolute internal links/assets for GitHub Pages subpath hosting
-        doc = doc.replace('href="/', f'href="{BASE_PATH}/').replace('src="/', f'src="{BASE_PATH}/')
+        doc = (doc.replace('href="/', f'href="{BASE_PATH}/').replace('src="/', f'src="{BASE_PATH}/')
+                  .replace("href='/", f"href='{BASE_PATH}/").replace("src='/", f"src='{BASE_PATH}/"))
     out = os.path.join(SITE, path, "index.html") if path else os.path.join(SITE, "index.html")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w", encoding="utf-8") as f:
