@@ -548,14 +548,10 @@ def sitemap():
         f.write(xml.replace("sitemap.org/schemas/sitemap", "sitemaps.org/schemas/sitemap"))
 
 def copy_static():
-    """Copy the design system (css/js/favicon) from static/ into docs/assets/."""
+    """Copy the design system + assets (css/js/favicon/og/heroes) from static/ into docs/assets/."""
     src = os.path.join(ROOT, "static")
     dst = os.path.join(SITE, "assets")
-    os.makedirs(dst, exist_ok=True)
-    for f in os.listdir(src):
-        if f.startswith("."):
-            continue
-        shutil.copy2(os.path.join(src, f), os.path.join(dst, f))
+    shutil.copytree(src, dst, dirs_exist_ok=True, ignore=shutil.ignore_patterns(".*"))
 
 def static_files():
     copy_static()
@@ -571,6 +567,7 @@ PAGE_INDEX = {}
 
 def main():
     global ALL_PAGES, PAGE_INDEX, HOME_HERO
+    copy_static()   # bring css/js/heroes into docs/assets BEFORE hero paths are resolved
     ALL_PAGES = load_content()
     PAGE_INDEX = {p["slug"]: p for p in ALL_PAGES}
     # resolve hero images if present on disk
