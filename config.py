@@ -18,7 +18,16 @@ BASE_PATH = "/wanderlane"   # GitHub Pages project subpath. Set to "" when a cus
 CONTACT = "hello@wanderlane.co"        # create this inbox (or point to your own)
 
 # Optional, paste-and-rebuild (see ops/ROADMAP.md):
-ANALYTICS = ""       # a privacy-friendly analytics <script> (Plausible/GoatCounter) — injected into every page
+# Travelpayouts Drive (their auto-monetization layer; snippet from the TP dashboard, installed 2026-07-18).
+# Injected into every page head. A privacy-friendly analytics snippet can be appended here too.
+ANALYTICS = """<script nowprocket data-noptimize="1" data-cfasync="false" data-wpfc-render="false" seraph-accel-crit="1" data-no-defer="1">
+(function () {
+  var script = document.createElement("script");
+  script.async = 1;
+  script.src = 'https://emrld.ltd/NTUyMDcx.js?t=552071';
+  document.head.appendChild(script);
+})();
+</script>"""
 GSC_VERIFY = ""      # Google Search Console verification token -> <meta google-site-verification> for indexing
 SOCIAL = {
     "pinterest": "https://www.pinterest.com/wanderlaneguides/",   # create (see ops/PINTEREST.md)
@@ -29,7 +38,7 @@ SOCIAL = {
 # One Travelpayouts marker drives 8 of the brands via the verified deep-link
 # format:  https://<sub>.travelpayouts.com/click?shmarker=<MARKER>&promo_id=<ID>
 #          &source_type=customlink&type=click&custom_url=<ENCODED DEST>
-TP_MARKER = "REPLACE_TP_MARKER"   # <- your Travelpayouts marker (e.g. 78606)
+TP_MARKER = "552071"              # Wissam's Travelpayouts marker (activated 2026-07-18)
 USE_TP    = True                  # route through Travelpayouts when a promo_id is known
 AMAZON_TAG = ""                   # optional: your-amazon-tag-20
 
