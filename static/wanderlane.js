@@ -12,6 +12,18 @@
     links.addEventListener('click', function (e) { if (e.target.tagName === 'A') links.classList.remove('open'); });
   }
 
+  // reveal on scroll
+  if ('IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); ro.unobserve(en.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+    document.querySelectorAll('.rv').forEach(function (el) { ro.observe(el); });
+  } else {
+    document.querySelectorAll('.rv').forEach(function (el) { el.classList.add('in'); });
+  }
+
   var toc = document.querySelector('.toc');
   if (toc && 'IntersectionObserver' in window) {
     var map = {};

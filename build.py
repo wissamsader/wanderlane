@@ -88,8 +88,30 @@ def essentials_block(city):
             f'<p style="display:flex;gap:12px;flex-wrap:wrap;margin:.2em 0 0">{esim}{ins}</p></div>')
 
 # ---------- business photo bridge (our own owned photos) --------------
+# Eyeballed photo picks (photo-gate pass 2026-07-18): swap menu boards, promo
+# posters, faces and grim storefronts for appetizing frames. None = use the
+# designed no-photo panel instead.
+PHOTO_PICKS = {
+    ("beirut", "falafel-tabbara"): 8,
+    ("beirut", "al-daouk"): 6,
+    ("beirut", "malek-al-foul"): 2,
+    ("berlin", "abu-haija-fleischerei"): 2,
+    ("berlin", "atscham-markt"): None,
+    ("berlin", "ali-lobany-fleischerei"): 5,
+    ("berlin", "al-amana-fleischerei"): 5,
+    ("palermo", "no-zu-toto"): 4,
+    ("palermo", "odori-e-sapori"): 5,
+    ("palermo", "trattoria-da-pino"): 7,
+    ("barcelona", "chez-lola"): 5,
+    ("barcelona", "celler-cal-marino"): 7,
+    ("damascus", "elburj"): 5,
+}
+
 def eat_photo(city_id, slug):
-    """Copy a featured business's real hero photo into site assets; return rel path or None."""
+    """Copy a featured business's real photo into site assets; return rel path or None."""
+    pick = PHOTO_PICKS.get((city_id, slug), 1)
+    if pick is None:
+        return None
     repo = os.path.join(BIZ_REPOS, f"{city_id}-github", slug, "img")
     if not os.path.isdir(repo):
         return None
@@ -97,8 +119,8 @@ def eat_photo(city_id, slug):
     imgs = [c for c in cands if c.lower().endswith((".jpg", ".jpeg", ".png", ".webp"))]
     if not imgs:
         return None
-    # prefer 01.*
-    hero = next((i for i in imgs if re.search(r"01\.", os.path.basename(i))), imgs[0])
+    pat = re.compile(rf"{pick:02d}\.")
+    hero = next((i for i in imgs if pat.search(os.path.basename(i))), imgs[0])
     outdir = os.path.join(SITE, "assets", "eats")
     os.makedirs(outdir, exist_ok=True)
     ext = os.path.splitext(hero)[1].lower()
@@ -150,7 +172,7 @@ def head(title, desc, path, image=None, jsonld=None, article=False):
 <meta name="theme-color" content="#FAF6EF">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/wanderlane.css">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 {('<meta name="google-site-verification" content="' + GSC_VERIFY + '">') if GSC_VERIFY else ''}
@@ -266,15 +288,17 @@ def render_eats(b, city_id):
         photo = it.get("photo")
         if slug and not photo:
             photo = eat_photo(cid, slug)
-        img = (f'<img class="card-photo" src="{esc(photo)}" alt="{esc(it["name"])}" loading="lazy">'
-               if photo else '<div class="card-photo" style="display:grid;place-items:center;'
-               'background:linear-gradient(135deg,var(--paper-2),#e8ddc9)">'
-               '<span style="font-family:var(--display);font-size:2rem;color:var(--clay);opacity:.5">&#127860;</span></div>')
+        if photo:
+            img = (f'<div class="frame"><div class="ph">'
+                   f'<img src="{esc(photo)}" alt="{esc(it["name"])}" loading="lazy"></div></div>')
+        else:
+            img = ('<div class="frame"><div class="nopic">'
+                   '<span class="np-stamp">Wander<br>lane<br>pick</span></div></div>')
         tag = f'<span class="card-tag">{esc(it["area"])}</span>' if it.get("area") else ""
         ours = ""
         link = ""
         if slug:
-            ours = '<span class="ours">Featured &middot; has a Wanderlane page</span>'
+            ours = '<span class="ours">Featured</span>'
             link = (f'<a class="link-arrow" href="{esc(biz_url(cid,slug))}" target="_blank" '
                     f'rel="noopener">Visit &amp; details <span class="arr">→</span></a>')
         cards += (f'<div class="card">{img}<div class="card-body">{tag}'
@@ -284,18 +308,35 @@ def render_eats(b, city_id):
     cls = "cards c3" + (" ranked" if ranked else "")
     return f'<div class="{cls}">{cards}</div>'
 
+AREA_CODE_DROP = {"the", "a", "an", "of", "de", "el", "la"}
+def area_code(area, name):
+    """Airport-style 3-letter code from the area (or name) for boarding-pass tabs."""
+    src = (area or name or "STA")
+    words = [w for w in re.split(r"[^A-Za-z]+", src) if w and w.lower() not in AREA_CODE_DROP]
+    if not words:
+        return "STA"
+    if len(words) >= 2:
+        return (words[0][0] + words[1][0] + (words[0][1] if len(words[0]) > 1 else "X")).upper()
+    return words[0][:3].upper()
+
+PLANE_SVG = ('<svg class="plane" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">'
+             '<path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>')
+
 def render_stays(b):
     cards = ""
     for it in b["items"]:
-        tag = f'<span class="card-tag">{esc(it["area"])}</span>' if it.get("area") else ""
+        code = area_code(it.get("area"), it.get("name"))
+        area = f'<span class="pass-area">{esc(it["area"])}</span>' if it.get("area") else ""
         price = f'<span class="price">{esc(it["band"])} <small>/ night</small></span>' if it.get("band") else ""
         btn = aff_button(it.get("program", "booking"), it.get("target"), it.get("query"),
                          it.get("label", "Check prices"), "btn-book btn-sm", small=True)
-        cards += (f'<div class="card"><div class="card-body">{tag}'
+        cards += (f'<div class="pass"><div class="tab"><span class="code">{esc(code)}</span>'
+                  f'{PLANE_SVG}<span class="lbl">Boarding</span></div><div class="perf"></div>'
+                  f'<div class="pass-body"><span class="barcode"></span>{area}'
                   f'<h3>{esc(it["name"])}</h3>'
                   f'<p class="card-blurb">{it["blurb"]}</p>'
-                  f'<div class="card-foot">{price}{btn}</div></div></div>')
-    return f'<div class="cards c3">{cards}</div>'
+                  f'<div class="pass-foot">{price}{btn}</div></div></div>')
+    return f'<div class="passes">{cards}</div>'
 
 def render_do(b):
     cards = ""
@@ -319,16 +360,32 @@ def render_compare(b):
     return f'<div class="table-wrap"><table class="compare"><thead><tr>{thead}</tr></thead><tbody>{rows}</tbody></table></div>{cap}'
 
 # ---------------------------------------------------------------- hero
+ROSE_SVG = ('<svg class="rose" viewBox="0 0 200 200" fill="none" stroke="currentColor" aria-hidden="true">'
+  '<circle cx="100" cy="100" r="86" stroke-width="1"/><circle cx="100" cy="100" r="62" stroke-width=".6" stroke-dasharray="3 7"/>'
+  '<path d="M100 10 L108 92 L100 100 L92 92 Z M100 190 L108 108 L100 100 L92 108 Z '
+  'M10 100 L92 92 L100 100 L92 108 Z M190 100 L108 92 L100 100 L108 108 Z" stroke-width="1"/>'
+  '<path d="M36 36 L96 96 M164 36 L104 96 M36 164 L96 104 M164 164 L104 104" stroke-width=".5" stroke-dasharray="2 6"/></svg>')
+
+def hero_stamp(city):
+    if not city:
+        return ""
+    return (f'<div class="stamp spin" style="width:120px;height:120px;right:8%;bottom:20%;font-size:.6rem;transform:rotate(10deg)">'
+            f'<span>{esc(city["short"]).upper()}<small>WANDERLANE &middot; VERIFIED</small></span></div>')
+
 def hero(page, city):
     img = page.get("hero")
-    accent = (city or {}).get("accent", "var(--forest-deep)")
+    accent = (city or {}).get("accent", "#1F4D3F")
     if img:
         bg = f'<img class="hero-img" src="{esc(img)}" alt="" fetchpriority="high">'
+        cls = "hero has-img"
         style = ""
+        deco = ""
     else:
         bg = ""
-        style = (f' style="background:'
-                 f'radial-gradient(120% 120% at 15% 10%,color-mix(in srgb,{accent} 78%,#000) 0%,{accent} 55%,color-mix(in srgb,{accent} 60%,#000) 100%)"')
+        cls = "hero"
+        style = (f' style="background:radial-gradient(120% 135% at 16% 4%,'
+                 f'color-mix(in srgb,{accent} 44%,var(--espresso)) 0%,var(--espresso) 58%)"')
+        deco = ROSE_SVG + hero_stamp(city)
     kicker = f'<div class="kicker">{esc(page["kicker"])}</div>' if page.get("kicker") else ""
     dek = f'<p class="dek">{esc(page["dek"])}</p>' if page.get("dek") else ""
     meta = ""
@@ -339,8 +396,13 @@ def hero(page, city):
         mparts.append(f'<span>{esc(page["read"])} read</span>')
     if mparts:
         meta = '<div class="hero-meta">' + '<span class="dot"></span>'.join(mparts) + '</div>'
-    return f"""<section class="hero"{style}>{bg}<div class="hero-inner"><div class="wrap">
+    return f"""<section class="{cls}"{style}>{bg}{deco}<div class="hero-inner"><div class="wrap">
 {kicker}<h1>{esc(page.get("h1") or page["title"])}</h1>{dek}{meta}</div></div></section>"""
+
+def route_divider():
+    return ('<div class="route" aria-hidden="true">'
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">'
+            '<path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></div>')
 
 # ---------------------------------------------------------------- pages
 def build_article(page):
@@ -400,17 +462,16 @@ def build_hub(city):
     intro = "".join(render_block(b, city["id"]) for b in city.get("intro_blocks", []))
     # go-deeper cards for the city's articles
     guide_cards = ""
-    for p in pages:
-        ph = p.get("hero")
-        img = (f'<img src="{esc(ph)}" alt="{esc(p["title"])}" loading="lazy">'
-               if ph else f'<div style="width:38%;flex:0 0 auto;background:linear-gradient(135deg,{city.get("accent","var(--forest)")},#000)"></div>')
-        guide_cards += (f'<a class="guide-card" href="/{city["id"]}/{p["slug"]}/">{img}'
-                        f'<div class="gc-body"><h3>{esc(p["title"])}</h3>'
+    for i, p in enumerate(pages):
+        kick = (p.get("kicker") or "").split("·")[-1].strip() or "Guide"
+        guide_cards += (f'<a class="guide-card rv rv-d{i%3}" href="/{city["id"]}/{p["slug"]}/">'
+                        f'{guide_thumb(p)}'
+                        f'<div class="gc-body"><span class="gc-kicker">{esc(kick)}</span><h3>{esc(p["title"])}</h3>'
                         f'<p>{esc(p.get("dek","")[:100])}</p></div></a>')
     deeper = ""
     if guide_cards:
         deeper = ('<section class="sec sec-alt"><div class="wrap">'
-                  f'<div class="sec-head"><div class="kicker">Go deeper</div><h2>More {esc(city["name"])} guides</h2></div>'
+                  f'<div class="sec-head rv"><div class="kicker">Go deeper</div><h2>More {esc(city["name"])} guides</h2></div>'
                   f'<div class="guide-list">{guide_cards}</div></div></section>')
     # faq
     faq_html, faq_ld = "", None
@@ -439,30 +500,39 @@ def build_hub(city):
 
 def build_home():
     cards = ""
-    for c in CITIES:
+    for i, c in enumerate(CITIES):
         ph = c.get("hero")
-        img = (f'<img src="{esc(ph)}" alt="{esc(c["name"])}">' if ph
-               else f'<div style="position:absolute;inset:0;z-index:-2;background:linear-gradient(160deg,{c.get("accent","var(--forest)")},#000)"></div>')
+        img = (f'<img src="{esc(ph)}" alt="{esc(c["name"])}" loading="lazy">' if ph else "")
         n = len([p for p in ALL_PAGES if p["city"] == c["id"]])
-        cnt = "Full guide" if n == 0 else (f'{n+1} guides')
-        cards += (f'<a class="city-card" href="/{c["id"]}/">{img}<div class="cc-body">'
-                  f'<div class="cc-count">{esc(c.get("region_label",""))} &middot; {cnt}</div>'
-                  f'<h3>{esc(c["name"])}</h3><p>{esc(c.get("tagline",""))}</p></div></a>')
-    hero_page = {"title": "Honest city guides, written from the road",
-                 "h1": "The good streets, found for you.",
-                 "kicker": BRAND,
-                 "dek": "Where to eat, where to stay, and what's actually worth your time — in the cities we know by foot, not by algorithm.",
-                 "hero": HOME_HERO}
-    home_hero = hero(hero_page, None).replace('class="hero"', 'class="hero home-hero"')
+        cnt = "Guide" if n == 0 else f'{n+1}<br>guides'
+        cards += (f'<a class="postcard rv rv-d{i%3}" href="/{c["id"]}/">'
+                  f'<span class="pc-air"></span><div class="ph">{img}</div>'
+                  f'<div class="pc-body"><div><h3>{esc(c["name"])}</h3>'
+                  f'<div class="pc-sub">{esc(c.get("region_label",""))} &middot; {esc(c.get("tagline",""))}</div></div>'
+                  f'<span class="pc-count">{cnt}</span></div></a>')
+    ticker_cities = "".join(f"<span>{esc(c['name'])}</span>" for c in CITIES)
+    ticker = (f'<div class="ticker" aria-hidden="true"><div class="ticker-track">'
+              f'{ticker_cities}{ticker_cities}</div></div>')
+    home_hero = f"""<section class="hero home-hero">
+{ROSE_SVG}
+<div class="stamp spin" style="width:130px;height:130px;left:7%;top:16%;font-size:.62rem;color:var(--cream);transform:rotate(-12deg)"><span>EST. 2026<small>FIELD NOTES</small></span></div>
+<div class="stamp" style="width:100px;height:100px;right:9%;top:24%;font-size:.56rem;color:var(--clay-soft);transform:rotate(9deg)"><span>7 CITIES<small>ON FOOT</small></span></div>
+<div class="hero-inner"><div class="wrap">
+<div class="kicker" style="justify-content:center">{esc(BRAND)} &middot; honest city guides</div>
+<h1>The good streets, <em>found</em> for you.</h1>
+<p class="dek">Where to eat, where to stay, and what's actually worth your time &mdash; in the cities we know by foot, not by algorithm.</p>
+<div class="hero-cta"><a class="btn btn-book btn-lg" href="#cities">Pick a city <span class="arr">↓</span></a></div>
+</div></div>{ticker}</section>"""
     ld = {"@context": "https://schema.org", "@type": "WebSite", "name": BRAND,
           "url": BASE_URL, "description": TAGLINE}
     doc = (head(f'{BRAND} — Honest City Guides for Food, Stays & Real Experiences',
                 "Independent, on-the-ground travel guides to Chiang Mai, Beirut, Barcelona, Palermo, Berlin, Da Nang & Hoi An, and Damascus. Where to eat, where to stay, what to do.",
                 "", image=HOME_HERO, jsonld=ld)
            + header() + home_hero
-           + '<section class="sec"><div class="wrap"><div class="sec-head center"><div class="kicker">Pick a city</div>'
+           + '<section class="sec" id="cities"><div class="wrap"><div class="sec-head center rv"><div class="kicker">Pick a city</div>'
            + '<h2>Where are you going?</h2><p class="muted">Every guide is built from real places we\'ve walked into — not a scraped list.</p></div>'
            + f'<div class="city-grid">{cards}</div></div></section>'
+           + route_divider()
            + home_popular()
            + home_manifesto()
            + footer())
@@ -471,31 +541,40 @@ def build_home():
 POPULAR = ["where-to-eat-in-chiang-mai", "3-days-in-barcelona", "where-to-eat-in-berlin",
            "chiang-mai-scooter-rental", "where-to-eat-in-palermo", "da-nang-hoi-an-itinerary"]
 
+def guide_thumb(p):
+    """Small photo thumb for a guide card: the city's real hero photo."""
+    hp = os.path.join(SITE, f'assets/heroes/{p["city"]}.jpg')
+    if os.path.exists(hp):
+        return f'<img src="/assets/heroes/{p["city"]}.jpg" alt="" loading="lazy">'
+    return ('<div class="gc-side">'
+            '<svg width="54" height="54" viewBox="0 0 32 32" fill="none" stroke="currentColor">'
+            '<circle cx="16" cy="16" r="13" stroke-width="1.2"/>'
+            '<path d="M16 6 L19 16 L16 26 L13 16 Z" fill="currentColor" stroke="none"/></svg></div>')
+
 def home_popular():
     cards = ""
-    for slug in POPULAR:
+    for i, slug in enumerate(POPULAR):
         p = PAGE_INDEX.get(slug)
         if not p:
             continue
         c = city_by_id(p["city"])
-        thumb = f'/assets/og-{p["city"]}.png'
-        cards += (f'<a class="guide-card" href="/{p["city"]}/{p["slug"]}/">'
-                  f'<img src="{thumb}" alt="{esc(p["title"])}" loading="lazy">'
-                  f'<div class="gc-body"><span class="card-tag">{esc(c["name"])}</span>'
+        cards += (f'<a class="guide-card rv rv-d{i%3}" href="/{p["city"]}/{p["slug"]}/">'
+                  f'{guide_thumb(p)}'
+                  f'<div class="gc-body"><span class="gc-kicker">{esc(c["name"])}</span>'
                   f'<h3>{esc(p["title"])}</h3><p>{esc(p.get("dek","")[:88])}</p></div></a>')
     if not cards:
         return ""
     return ('<section class="sec"><div class="wrap">'
-            '<div class="sec-head center"><div class="kicker">Reader favourites</div>'
+            '<div class="sec-head center rv"><div class="kicker">Reader favourites</div>'
             '<h2>Popular guides</h2></div>'
             f'<div class="guide-list">{cards}</div></div></section>')
 
 def home_manifesto():
-    return ('<section class="sec sec-alt"><div class="wrap"><div class="prose center" style="margin-inline:auto">'
-      '<div class="kicker" style="text-align:center">Why Wanderlane</div>'
-      '<h2>The internet is full of fake travel advice. This isn\'t.</h2>'
-      '<p class="muted">Most "best of" travel lists are written by people who have never been there — the same fifteen places, reworded by a machine. '
-      'Our guides start from restaurants, cafes and stays we actually feature and photograph on the ground, then fill in the practical stuff you really need: '
+    return ('<section class="sec sec-dark"><div class="wrap"><div class="prose center rv" style="margin-inline:auto;position:relative">'
+      '<div class="kicker" style="justify-content:center;color:var(--cream)">Why Wanderlane</div>'
+      '<h2>The internet is full of fake travel advice.<br><em style="color:var(--clay-soft)">This isn&rsquo;t.</em></h2>'
+      '<p>Most &ldquo;best of&rdquo; travel lists are written by people who have never been there — the same fifteen places, reworded by a machine. '
+      'Our guides start from restaurants, caf&eacute;s and stays we actually feature and photograph on the ground, then fill in the practical stuff you really need: '
       'how to get there, what to book ahead, what to skip. No fluff, no invented five-star everything. Just the good streets.</p>'
       '</div></div></section>')
 
