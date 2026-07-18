@@ -508,20 +508,36 @@ def city_slugs(city):
             harvest(p.get("blocks"))
     return slugs
 
+STRIP_FALLBACK = {   # cities with few featured-eats photos still get a real-photo band
+    "vietnam": ["banh-xeo-ba-duong", "bun-cha-ca-109", "kon-tiki-hostel", "nha-bo-homestay", "may-spa", "harmony-haven-spa"],
+}
+
 def photo_strip(city, count=6, skip=1):
     """A band of real, vetted photos from this city's featured businesses."""
-    figs = ""
-    n = 0
-    for s in city_slugs(city)[skip:]:
-        ph = eat_photo(city["id"], s)
-        if not ph:
-            continue
-        label = s.replace("-", " ")
+    figs, n, used = "", 0, set()
+    def add(ph, label):
+        nonlocal figs, n
+        if not ph or ph in used:
+            return
+        used.add(ph)
         figs += (f'<figure><img src="{esc(ph)}" alt="{esc(label)}" loading="lazy">'
                  f'<figcaption>{esc(label)}</figcaption></figure>')
         n += 1
+    for s in city_slugs(city)[skip:]:
         if n >= count:
             break
+        add(eat_photo(city["id"], s), s.replace("-", " "))
+    if n < count:
+        for s in STRIP_FALLBACK.get(city["id"], []):
+            if n >= count:
+                break
+            add(eat_photo(city["id"], s), s.replace("-", " "))
+    if n < count and city["id"] == "chiangmai":
+        for ph in thumb_pool("chiangmai")[1:]:      # guesthouse photos (skip the hero itself)
+            if n >= count:
+                break
+            label = os.path.basename(ph).replace("chiangmai-", "").rsplit(".", 1)[0].replace("-", " ")
+            add(ph, label)
     return f'<div class="strip rv">{figs}</div>' if n >= 4 else ""
 
 def dotline(city_id, dark=False):
