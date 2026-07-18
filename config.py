@@ -12,8 +12,8 @@ tracking on. Re-run build.py and the entire network is monetized."""
 
 BRAND   = "Wanderlane"
 TAGLINE = "The good streets, found."
-BASE_URL = "https://wissamsader.github.io/wanderlane"   # -> https://wanderlane.co once the domain is live
-BASE_PATH = "/wanderlane"   # GitHub Pages project subpath. Set to "" when a custom domain serves at root.
+BASE_URL = "https://wanderlane.space"   # custom domain live 2026-07-19 (Namecheap, GitHub Pages)
+BASE_PATH = ""   # serving at domain root; old github.io/wanderlane URLs 301-redirect here automatically
 
 CONTACT = "hello@wanderlane.co"        # create this inbox (or point to your own)
 
