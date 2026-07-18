@@ -30,8 +30,7 @@ ANALYTICS = """<script nowprocket data-noptimize="1" data-cfasync="false" data-w
 </script>"""
 GSC_VERIFY = ""      # Google Search Console verification token -> <meta google-site-verification> for indexing
 SOCIAL = {
-    "pinterest": "https://www.pinterest.com/wanderlaneguides/",   # create (see ops/PINTEREST.md)
-    "instagram": "https://www.instagram.com/wanderlane.guides/",
+    "pinterest": "https://www.pinterest.com/studiomorphik/",   # business account set up 2026-07-18 (Wanderlane profile)
 }
 
 # ---------------------------------------------------------------- AFFILIATES
