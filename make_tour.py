@@ -46,9 +46,9 @@ SECTIONS = [
  ("The moat", "Real photos, not stock",
   "Fifteen Beirut tables, ranked, each with a photo taken on the ground &mdash; LMATBAKH&rsquo;s candlelit terrace, a wood-fired oven mid-flame, a 60-year falafel counter. This is the one thing an AI travel site can&rsquo;t fake, and it&rsquo;s ours already.",
   frame(shots["beirut"], "wanderlane/beirut/where-to-eat-in-beirut")),
- ("Where the money is", "Itineraries that book tickets",
-  "A &lsquo;3 days in Barcelona&rsquo; plan with a &lsquo;book Sagrada Fam&iacute;lia &amp; Park G&uuml;ell before anything else&rsquo; button &mdash; among the highest-earning affiliate links in travel. Itineraries are also Pinterest&rsquo;s top performers, so they pull traffic and convert it.",
-  frame(shots["barca"], "wanderlane/barcelona/3-days-in-barcelona")),
+ ("Where the money is", "Boarding-pass hotel cards",
+  "Every &lsquo;where to stay&rsquo; guide now sells with designed boarding-pass cards &mdash; airport-code tab, perforation, barcode, price, and a booking button that earns a commission on every stay. No borrowed hotel photos needed; the design carries it.",
+  frame(shots["barca"], "wanderlane/chiangmai/where-to-stay-in-chiang-mai")),
  ("Handled with care", "A love letter, done responsibly",
   "Damascus is a food-and-heritage guide, not a booking pitch: real photos of Bakdash and the old-city caf&eacute;s, an honest travel-advisory note, and no hotel CTAs. Some cities earn trust instead of commission &mdash; that&rsquo;s the right call.",
   frame(shots["damascus"], "wanderlane/damascus")),
@@ -79,10 +79,11 @@ COMPASS = ('<svg viewBox="0 0 32 32" width="34" height="34" fill="none" aria-hid
 HTML = """<div class="wrap">
 <header class="hero">
   <div class="mark">__COMPASS__<span>Wanderlane</span></div>
-  <p class="eyebrow">Build report &middot; 18 July 2026</p>
-  <h1>Here&rsquo;s what I built<br>while you slept.</h1>
-  <p class="lede">A travel-guide network across all seven cities we&rsquo;ve worked in &mdash; earning affiliate
-  commissions on autopilot, and fed by the real restaurants and photos from the sites we already build.</p>
+  <p class="eyebrow">Build report &middot; redesigned 18 July 2026</p>
+  <h1>Wanderlane, rebuilt<br>to our real standard.</h1>
+  <p class="lede">A travel-guide network across all seven cities we&rsquo;ve worked in &mdash; now with the
+  &ldquo;field journal&rdquo; design: film-grain heroes, passport stamps, postcard city cards, boarding-pass
+  hotel cards, and a photo pass that swapped every weak image for a real, appetizing one.</p>
   <div class="stats">
     <div><b>7</b><span>cities</span></div>
     <div><b>26</b><span>guides</span></div>

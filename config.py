@@ -93,6 +93,17 @@ AFF = {
     },
 }
 
+# Dot-marquee vocabulary per city (renders as the italic ticker strip on hubs)
+CITY_WORDS = {
+    "chiangmai": ["Khao soi", "The Old City moat", "Doi Suthep at dawn", "Night markets", "Nimman cafés", "Sticky Waterfalls", "Sai ua"],
+    "beirut":    ["Manoushe at 6am", "Hamra", "The Corniche", "Mezze for the table", "Mar Mikhael", "Knefeh", "Fairuz on the radio"],
+    "barcelona": ["Vermut hour", "El Born", "Gaudí", "Pa amb tomàquet", "Gràcia squares", "La Boqueria", "Absenta"],
+    "palermo":   ["Arancine", "Ballarò", "The Kalsa", "Cannoli", "Mondello", "Vucciria at night", "Pane e panelle"],
+    "berlin":    ["Sonnenallee", "Kunafa", "Museum Island", "Neukölln", "Döner", "The Wall", "Späti culture"],
+    "vietnam":   ["Bánh xèo", "My Khe beach", "Lantern night", "Hoi An old town", "Mì Quảng", "An Bàng", "Basket boats"],
+    "damascus":  ["Booza at Bakdash", "The old souq", "Courtyard houses", "Knafeh", "Straight Street", "Jasmine", "Arabic coffee"],
+}
+
 # ---------------------------------------------------------------- CITIES
 # id MUST match the business repo slug (wissamsader.github.io/<id>/) so featured
 # restaurants link to their real pages and reuse their real photos.

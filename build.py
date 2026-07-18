@@ -14,6 +14,10 @@ try:
     from config import ANALYTICS, GSC_VERIFY
 except ImportError:
     ANALYTICS, GSC_VERIFY = "", ""
+try:
+    from config import CITY_WORDS
+except ImportError:
+    CITY_WORDS = {}
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.join(ROOT, "docs")   # GitHub Pages serves /docs at the repo subpath
@@ -281,8 +285,27 @@ def render_block(b, city_id=None):
 
 def render_eats(b, city_id):
     ranked = b.get("ranked")
+    items = list(b["items"])
+    feature_html = ""
+    if b.get("_feature") and items:
+        it = items.pop(0)
+        cid = it.get("city", city_id)
+        slug = it.get("slug")
+        photo = it.get("photo") or (eat_photo(cid, slug) if slug else None)
+        if photo:
+            link = (f'<a class="link-arrow" href="{esc(biz_url(cid,slug))}" target="_blank" rel="noopener">'
+                    f'Visit &amp; details <span class="arr">→</span></a>') if slug else ""
+            tag = f'<span class="card-tag">{esc(it["area"])}</span>' if it.get("area") else ""
+            feature_html = (f'<div class="feature rv"><div class="f-ph">'
+                            f'<span class="f-no">No. 01 — the one to start with</span>'
+                            f'<img src="{esc(photo)}" alt="{esc(it["name"])}" loading="lazy"></div>'
+                            f'<div class="f-body">{tag}<h3>{esc(it["name"])}</h3>'
+                            f'<p class="card-blurb">{it["blurb"]}</p>'
+                            f'<div class="card-foot"><span class="ours">Featured</span>{link}</div></div></div>')
+        else:
+            items.insert(0, it)
     cards = ""
-    for it in b["items"]:
+    for it in items:
         cid = it.get("city", city_id)
         slug = it.get("slug")
         photo = it.get("photo")
@@ -305,8 +328,8 @@ def render_eats(b, city_id):
                   f'<h3>{esc(it["name"])}</h3>'
                   f'<p class="card-blurb">{it["blurb"]}</p>'
                   f'<div class="card-foot">{ours}{link}</div></div></div>')
-    cls = "cards c3" + (" ranked" if ranked else "")
-    return f'<div class="{cls}">{cards}</div>'
+    cls = "cards c3" + (" ranked" if ranked else "") + (" ranked-off" if (ranked and feature_html) else "")
+    return f'{feature_html}<div class="{cls}">{cards}</div>'
 
 AREA_CODE_DROP = {"the", "a", "an", "of", "de", "el", "la"}
 def area_code(area, name):
@@ -339,16 +362,17 @@ def render_stays(b):
     return f'<div class="passes">{cards}</div>'
 
 def render_do(b):
-    cards = ""
+    """Things-to-do as an elegant numbered index (hairline rows, Idyllic pattern)."""
+    rows = ""
     for it in b["items"]:
-        tag = f'<span class="card-tag">{esc(it["tag"])}</span>' if it.get("tag") else ""
+        tag = f'<span class="ix-tag">{esc(it["tag"])}</span>' if it.get("tag") else ""
         btn = aff_button(it.get("program", "gyg"), it.get("target"), it.get("query"),
-                         it.get("label"), "btn-forest btn-sm", small=True) if it.get("program") else ""
-        cards += (f'<div class="card"><div class="card-body">{tag}'
-                  f'<h3>{esc(it["name"])}</h3>'
-                  f'<p class="card-blurb">{it["blurb"]}</p>'
-                  f'<div class="card-foot">{btn}</div></div></div>')
-    return f'<div class="cards c3">{cards}</div>'
+                         it.get("label", "Book"), "btn-forest btn-sm", small=True) if it.get("program") else ""
+        rows += (f'<div class="ix-row"><span class="ix-no"></span>'
+                 f'<h3>{esc(it["name"])} {tag}</h3>'
+                 f'<p class="ix-blurb">{it["blurb"]}</p>'
+                 f'<span class="ix-act">{btn}</span></div>')
+    return f'<div class="index">{rows}</div>'
 
 def render_compare(b):
     thead = "".join(f"<th>{esc(h)}</th>" for h in b["head"])
@@ -438,6 +462,19 @@ def build_article(page):
             rel_html = f'<div class="related"><h2>Keep reading</h2><div class="guide-list">{cards}</div></div>'
     crumb = (f'<div class="crumb wrap"><a href="/">Home</a><span class="sep">/</span>'
              f'<a href="/{city["id"]}/">{esc(city["name"])}</a><span class="sep">/</span>{esc(page["title"])}</div>')
+    # light editorial article hero (outlined giant initial, mono meta)
+    meta_parts = []
+    if page.get("updated"):
+        meta_parts.append(f'<span>Updated {esc(page["updated"])}</span>')
+    if page.get("read"):
+        meta_parts.append(f'<span>{esc(page["read"])} read</span>')
+    meta = ('<div class="hero-meta">' + '<span class="dot"></span>'.join(meta_parts) + '</div>') if meta_parts else ""
+    art_hero = (f'<section class="art-hero"><div class="wrap">'
+                f'<span class="initial" aria-hidden="true">{esc(city["name"][0])}.</span>'
+                f'<div class="kicker">{esc(page.get("kicker",""))}</div>'
+                f'<h1>{esc(page.get("h1") or page["title"])}</h1>'
+                f'<p class="dek">{esc(page.get("dek",""))}</p>{meta}'
+                f'</div></section>')
     ld = {"@context": "https://schema.org", "@type": "Article",
           "headline": page["title"], "description": page.get("description", ""),
           "author": {"@type": "Organization", "name": BRAND},
@@ -446,7 +483,7 @@ def build_article(page):
     graph = {"@context": "https://schema.org", "@graph": [ld] + ([faq_ld] if faq_ld else [])}
     doc = (head(f'{page["title"]} | {BRAND}', page.get("description", page.get("dek", "")), path,
                 image=page.get("hero") or f"/assets/og-{page['city']}.png", jsonld=graph, article=True)
-           + header(active=page["city"]) + disclosure_strip() + hero(page, city)
+           + header(active=page["city"]) + disclosure_strip() + art_hero
            + crumb
            + '<div class="article"><div class="wrap"><div class="article-grid">'
            + toc_html
@@ -455,17 +492,90 @@ def build_article(page):
            + footer())
     write(path, doc)
 
+def city_slugs(city):
+    """All featured-business slugs used anywhere in this city's content (for photo strips)."""
+    slugs, seen = [], set()
+    def harvest(blocks):
+        for b in blocks or []:
+            if b.get("t") == "eats":
+                for it in b["items"]:
+                    s = it.get("slug")
+                    if s and s not in seen:
+                        seen.add(s); slugs.append(s)
+    harvest(city.get("intro_blocks"))
+    for p in ALL_PAGES:
+        if p["city"] == city["id"]:
+            harvest(p.get("blocks"))
+    return slugs
+
+def photo_strip(city, count=6, skip=1):
+    """A band of real, vetted photos from this city's featured businesses."""
+    figs = ""
+    n = 0
+    for s in city_slugs(city)[skip:]:
+        ph = eat_photo(city["id"], s)
+        if not ph:
+            continue
+        label = s.replace("-", " ")
+        figs += (f'<figure><img src="{esc(ph)}" alt="{esc(label)}" loading="lazy">'
+                 f'<figcaption>{esc(label)}</figcaption></figure>')
+        n += 1
+        if n >= count:
+            break
+    return f'<div class="strip rv">{figs}</div>' if n >= 4 else ""
+
+def dotline(city_id, dark=False):
+    words = CITY_WORDS.get(city_id)
+    if not words:
+        return ""
+    seq = "".join(f"<span>{esc(w)}</span>" for w in words)
+    cls = "dotline on-dark" if dark else "dotline"
+    return f'<div class="{cls}" aria-hidden="true"><div class="ticker-track">{seq}{seq}</div></div>'
+
+def city_hero(city):
+    n_guides = len([p for p in ALL_PAGES if p["city"] == city["id"]]) + 1
+    n_places = len(city_slugs(city))
+    img = city.get("hero")
+    photo = (f'<img src="{esc(img)}" alt="{esc(city["name"])}" fetchpriority="high">'
+             if img else "")
+    cap = f'<span class="ch-cap">Photographed on the ground &middot; {esc(city["name"])}</span>'
+    initial = esc(city["name"][0]) + "."
+    stat_places = f'<div><b>{n_places or "—"}</b>places we vouch for</div>' if n_places else ""
+    return f"""<section class="city-hero">
+<div class="ch-left"><span class="initial" aria-hidden="true">{initial}</span>
+<div class="kicker">{esc(city.get("region_label",""))}</div>
+<h1>{esc(city["name"])}</h1>
+<p class="dek">{esc(city.get("dek",""))}</p>
+<div class="ch-meta"><div><b>{n_guides}</b>guides</div>{stat_places}<div><b>July&nbsp;2026</b>last walked</div></div>
+</div>
+<div class="ch-right">{photo}{cap}</div>
+</section>"""
+
 def build_hub(city):
     path = f'{city["id"]}/'
     pages = [p for p in ALL_PAGES if p["city"] == city["id"]]
     pages.sort(key=lambda p: p.get("order", 99))
-    intro = "".join(render_block(b, city["id"]) for b in city.get("intro_blocks", []))
+    # transform intro blocks: number the h2s as chapters, feature the first eats
+    blocks = [dict(b) for b in city.get("intro_blocks", [])]
+    ch = 0
+    first_eats = True
+    parts = []
+    for b in blocks:
+        if b.get("t") == "h2":
+            ch += 1
+            parts.append(f'<div class="chapter rv"><span class="no">CH. {ch:02d}</span><h2 id="{anchor_id(b["text"])}">{esc(b["text"])}</h2></div>')
+            continue
+        if b.get("t") == "eats" and first_eats:
+            b["_feature"] = True
+            first_eats = False
+        parts.append(render_block(b, city["id"]))
+    intro = "".join(parts)
     # go-deeper cards for the city's articles
     guide_cards = ""
     for i, p in enumerate(pages):
         kick = (p.get("kicker") or "").split("·")[-1].strip() or "Guide"
         guide_cards += (f'<a class="guide-card rv rv-d{i%3}" href="/{city["id"]}/{p["slug"]}/">'
-                        f'{guide_thumb(p)}'
+                        f'{guide_thumb(p, i+1)}'
                         f'<div class="gc-body"><span class="gc-kicker">{esc(kick)}</span><h3>{esc(p["title"])}</h3>'
                         f'<p>{esc(p.get("dek","")[:100])}</p></div></a>')
     deeper = ""
@@ -482,19 +592,17 @@ def build_hub(city):
         faq_ld = {"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": re.sub("<[^>]+>", "", a)}}
             for q, a in city["faq"]]}
-    hub_page = {"title": f'{city["name"]} Travel Guide', "h1": city.get("hub_h1", city["name"]),
-                "kicker": city.get("region_label", "City guide"),
-                "dek": city.get("dek", ""), "hero": city.get("hero"), "updated": "July 2026"}
     coll = {"@context": "https://schema.org", "@type": "CollectionPage",
             "name": f'{city["name"]} Travel Guide', "description": city.get("dek", ""), "url": wl_url(path)}
     graph = {"@context": "https://schema.org", "@graph": [coll] + ([faq_ld] if faq_ld else [])}
-    crumb = (f'<div class="crumb wrap"><a href="/">Home</a><span class="sep">/</span>{esc(city["name"])}</div>')
     doc = (head(f'{city["name"]} Travel Guide: Where to Eat, Stay & What to Do | {BRAND}',
                 city.get("dek", ""), path, image=city.get("hero") or f"/assets/og-{city['id']}.png", jsonld=graph)
-           + header(active=city["id"]) + disclosure_strip() + hero(hub_page, city) + crumb
-           + f'<section class="sec"><div class="wrap"><div class="prose" style="max-width:920px;margin-inline:auto">{intro}</div></div></section>'
+           + header(active=city["id"]) + disclosure_strip()
+           + city_hero(city)
+           + dotline(city["id"])
+           + f'<section class="sec"><div class="wrap">{photo_strip(city)}<div class="prose" style="max-width:960px;margin-inline:auto">{intro}</div></div></section>'
            + deeper + faq_html
-           + (f'<section class="sec"><div class="wrap"><div class="prose" style="max-width:920px;margin-inline:auto">{essentials_block(city)}</div></div></section>' if essentials_block(city) else "")
+           + (f'<section class="sec"><div class="wrap"><div class="prose" style="max-width:960px;margin-inline:auto">{essentials_block(city)}</div></div></section>' if essentials_block(city) else "")
            + footer())
     write(path, doc)
 
@@ -511,12 +619,16 @@ def build_home():
                   f'<div class="pc-sub">{esc(c.get("region_label",""))} &middot; {esc(c.get("tagline",""))}</div></div>'
                   f'<span class="pc-count">{cnt}</span></div></a>')
     ticker_cities = "".join(f"<span>{esc(c['name'])}</span>" for c in CITIES)
-    ticker = (f'<div class="ticker" aria-hidden="true"><div class="ticker-track">'
+    ticker = (f'<div class="dotline on-dark" aria-hidden="true"><div class="ticker-track">'
               f'{ticker_cities}{ticker_cities}</div></div>')
-    home_hero = f"""<section class="hero home-hero">
-{ROSE_SVG}
-<div class="stamp spin" style="width:130px;height:130px;left:7%;top:16%;font-size:.62rem;color:var(--cream);transform:rotate(-12deg)"><span>EST. 2026<small>FIELD NOTES</small></span></div>
-<div class="stamp" style="width:100px;height:100px;right:9%;top:24%;font-size:.56rem;color:var(--clay-soft);transform:rotate(9deg)"><span>7 CITIES<small>ON FOOT</small></span></div>
+    hero_img = ""
+    hp = os.path.join(SITE, "assets/heroes/beirut.jpg")
+    if os.path.exists(hp):
+        hero_img = '<img class="hero-img" src="/assets/heroes/beirut.jpg" alt="" fetchpriority="high">'
+    home_hero = f"""<section class="hero home-hero has-img">
+{hero_img}{ROSE_SVG}
+<div class="stamp spin" style="width:126px;height:126px;left:7%;top:16%;font-size:.6rem;color:var(--cream);transform:rotate(-12deg)"><span>EST. 2026<small>FIELD NOTES</small></span></div>
+<div class="stamp" style="width:98px;height:98px;right:9%;top:24%;font-size:.54rem;color:var(--ochre);transform:rotate(9deg)"><span>7 CITIES<small>ON FOOT</small></span></div>
 <div class="hero-inner"><div class="wrap">
 <div class="kicker" style="justify-content:center">{esc(BRAND)} &middot; honest city guides</div>
 <h1>The good streets, <em>found</em> for you.</h1>
@@ -541,11 +653,47 @@ def build_home():
 POPULAR = ["where-to-eat-in-chiang-mai", "3-days-in-barcelona", "where-to-eat-in-berlin",
            "chiang-mai-scooter-rental", "where-to-eat-in-palermo", "da-nang-hoi-an-itinerary"]
 
-def guide_thumb(p):
-    """Small photo thumb for a guide card: the city's real hero photo."""
-    hp = os.path.join(SITE, f'assets/heroes/{p["city"]}.jpg')
+# Chiang Mai guesthouse photos (its repo layout is <slug>/photos/); vetted picks.
+CM_THUMBS = [("hoh-guesthouse", 1), ("little-siri", 4), ("baan-thalang", 1), ("tangmo-house", 1), ("chinda-boutique", 2)]
+_THUMB_POOLS = {}
+
+def thumb_pool(city_id):
+    """Per-city pool of distinct real photos for guide-card thumbs."""
+    if city_id in _THUMB_POOLS:
+        return _THUMB_POOLS[city_id]
+    pool = []
+    hp = os.path.join(SITE, f"assets/heroes/{city_id}.jpg")
     if os.path.exists(hp):
-        return f'<img src="/assets/heroes/{p["city"]}.jpg" alt="" loading="lazy">'
+        pool.append(f"/assets/heroes/{city_id}.jpg")
+    if city_id == "chiangmai":
+        outdir = os.path.join(SITE, "assets", "thumbs")
+        os.makedirs(outdir, exist_ok=True)
+        for slug, n in CM_THUMBS:
+            for ext in (".jpg", ".jpeg", ".png"):
+                src = os.path.join(BIZ_REPOS, "chiangmai-github", slug, "photos", f"{n:02d}{ext}")
+                if os.path.exists(src):
+                    out = f"chiangmai-{slug}.jpg"
+                    shutil.copy2(src, os.path.join(outdir, out))
+                    pool.append(f"/assets/thumbs/{out}")
+                    break
+    else:
+        c = city_by_id(city_id)
+        if c:
+            for s in city_slugs(c):
+                ph = eat_photo(city_id, s)
+                if ph and ph not in pool:
+                    pool.append(ph)
+                if len(pool) >= 7:
+                    break
+    _THUMB_POOLS[city_id] = pool
+    return pool
+
+def guide_thumb(p, i=0):
+    """Photo thumb for a guide card — a different real photo per card."""
+    pool = thumb_pool(p["city"])
+    if pool:
+        ph = pool[i % len(pool)]
+        return f'<img src="{esc(ph)}" alt="" loading="lazy">'
     return ('<div class="gc-side">'
             '<svg width="54" height="54" viewBox="0 0 32 32" fill="none" stroke="currentColor">'
             '<circle cx="16" cy="16" r="13" stroke-width="1.2"/>'
@@ -559,7 +707,7 @@ def home_popular():
             continue
         c = city_by_id(p["city"])
         cards += (f'<a class="guide-card rv rv-d{i%3}" href="/{p["city"]}/{p["slug"]}/">'
-                  f'{guide_thumb(p)}'
+                  f'{guide_thumb(p, i)}'
                   f'<div class="gc-body"><span class="gc-kicker">{esc(c["name"])}</span>'
                   f'<h3>{esc(p["title"])}</h3><p>{esc(p.get("dek","")[:88])}</p></div></a>')
     if not cards:
