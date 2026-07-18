@@ -38,7 +38,8 @@ SOCIAL = {
 # One Travelpayouts marker drives 8 of the brands via the verified deep-link
 # format:  https://<sub>.travelpayouts.com/click?shmarker=<MARKER>&promo_id=<ID>
 #          &source_type=customlink&type=click&custom_url=<ENCODED DEST>
-TP_MARKER = "552071"              # Wissam's Travelpayouts marker (activated 2026-07-18)
+TP_MARKER = "752837"              # Wissam's Travelpayouts partner marker (confirmed in dashboard 2026-07-18;
+                                  # 552071 = the Drive traffic-source id used only in the Drive script)
 USE_TP    = True                  # route through Travelpayouts when a promo_id is known
 AMAZON_TAG = ""                   # optional: your-amazon-tag-20
 
