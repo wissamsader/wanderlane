@@ -94,10 +94,10 @@ AFF = {
         "direct_param": None, "direct_id": "",
         "label": "See reviews on Tripadvisor", "qspace": "%20",
     },
-    "safetywing": {  # NOT on Travelpayouts — direct only; recurring 10% commission
+    "safetywing": {  # NOT on Travelpayouts — direct; recurring ~10% commission (ambassador 26565169, activated 2026-07-18)
         "dest": "https://safetywing.com/nomad-insurance/",
         "tp": None,
-        "direct_param": "referenceID", "direct_id": "",
+        "direct_param": "referenceID", "direct_id": "26565169",
         "label": "Get nomad insurance (SafetyWing)", "qspace": "%20",
     },
 }
