@@ -138,6 +138,22 @@ def eat_photo(city_id, slug):
 def biz_url(city_id, slug):
     return f"https://wissamsader.github.io/{city_id}/{slug}/"
 
+# Decorative dish still-lifes for slugless DISH cards (no venue claim; alt marks them
+# illustrative). Generated 07-18, eyeballed: no text/logos/people, palette-matched.
+DISH_STILLS = {
+    ("vietnam", "cao-lau"): "/assets/stills/vietnam-cao-lau.jpg",
+    ("vietnam", "white-rose-dumplings"): "/assets/stills/vietnam-white-rose.jpg",
+    ("vietnam", "banh-mi-phuong"): "/assets/stills/vietnam-banh-mi.jpg",
+}
+
+def dish_still(city_id, name):
+    key = slugify(re.sub(r"[àáảãạâầấẩẫậăằắẳẵặ]", "a",
+          re.sub(r"[èéẻẽẹêềếểễệ]", "e",
+          re.sub(r"[ìíỉĩị]", "i",
+          re.sub(r"[òóỏõọôồốổỗộơờớởỡợ]", "o",
+          re.sub(r"[ùúủũụưừứửữự]", "u", name.lower()))))))
+    return DISH_STILLS.get((city_id, key))
+
 # ---------------------------------------------------------------- SVG mark
 COMPASS = ('<svg class="wl-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">'
   '<g class="ring"><circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.6" opacity=".5"/>'
@@ -311,9 +327,13 @@ def render_eats(b, city_id):
         photo = it.get("photo")
         if slug and not photo:
             photo = eat_photo(cid, slug)
+        still = None if photo else dish_still(cid, it["name"])
         if photo:
             img = (f'<div class="frame"><div class="ph">'
                    f'<img src="{esc(photo)}" alt="{esc(it["name"])}" loading="lazy"></div></div>')
+        elif still:
+            img = (f'<div class="frame"><div class="ph">'
+                   f'<img src="{esc(still)}" alt="{esc(it["name"])} — dish still life (illustrative)" loading="lazy"></div></div>')
         else:
             img = ('<div class="frame"><div class="nopic">'
                    '<span class="np-stamp">Wander<br>lane<br>pick</span></div></div>')
