@@ -820,6 +820,8 @@ def static_files():
     copy_static()
     with open(os.path.join(SITE, "CNAME"), "w") as f:      # GitHub Pages custom domain
         f.write("wanderlane.space\n")
+    with open(os.path.join(SITE, "wanderlane2026seed.txt"), "w") as f:   # IndexNow key file
+        f.write("wanderlane2026seed")
     with open(os.path.join(SITE, ".nojekyll"), "w") as f:
         f.write("")
     with open(os.path.join(SITE, "robots.txt"), "w") as f:
