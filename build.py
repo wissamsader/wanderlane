@@ -50,6 +50,8 @@ def aff_link(program, target=None, query=None, subid=None):
     else:
         q = (query or "").replace(" ", a.get("qspace", "+"))
         dest = a["dest"].format(q=q) if "{q}" in a["dest"] else a["dest"]
+    if a.get("wrap"):  # dashboard-verified deep-link (program active for our marker)
+        return a["wrap"].format(dest=urllib.parse.quote(dest, safe=""))
     tp = a.get("tp")
     if USE_TP and tp and tp.get("joined") and tp.get("promo_id") and TP_MARKER and not TP_MARKER.startswith("REPLACE"):
         marker = TP_MARKER + (("." + re.sub(r"[^A-Za-z0-9_]", "", subid)) if subid else "")

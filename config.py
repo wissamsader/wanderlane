@@ -77,6 +77,8 @@ AFF = {
     "klook": {
         "dest": "https://www.klook.com/en-US/search/?query={q}",
         "tp": {"sub": None, "promo_id": None},
+        # program AVAILABLE for marker 752837 — verified redirect chain 2026-07-19 (lands with aff_pid=752837)
+        "wrap": "https://affiliate.klook.com/redirect?aid=api%7C13694%7Cf15c5c0b13ed4200b513879d5-752837%7Cpid%7C752837&k_site={dest}",
         "direct_param": "aid", "direct_id": "",
         "label": "Book on Klook", "qspace": "%20",
     },
@@ -86,9 +88,10 @@ AFF = {
         "direct_param": None, "direct_id": "",
         "label": "Check times & prices on 12Go", "qspace": "-",
     },
-    "airalo": {  # eSIM
+    "airalo": {  # eSIM — program AVAILABLE for marker 752837 (12%); Impact deep-link verified 2026-07-19
         "dest": "https://www.airalo.com/{q}-esim",
         "tp": {"sub": None, "promo_id": None},
+        "wrap": "https://airalo.pxf.io/c/1209822/1310283/15608?sharedID=752837_&u={dest}",
         "direct_param": None, "direct_id": "",
         "label": "Get an eSIM (Airalo)", "qspace": "-",
     },
