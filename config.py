@@ -34,6 +34,10 @@ SOCIAL = {
 }
 
 # ---------------------------------------------------------------- AFFILIATES
+# ⚠️ "joined": True ONLY after the brand's program is JOINED + APPROVED in the
+# Travelpayouts dashboard (Programs/Offers page). Until then TP click links show
+# a blank "marker is not subscribed to campaign" page — so aff_link() falls back
+# to the plain real destination URL (honest link, no tracking, no commission).
 # One Travelpayouts marker drives 8 of the brands via the verified deep-link
 # format:  https://<sub>.travelpayouts.com/click?shmarker=<MARKER>&promo_id=<ID>
 #          &source_type=customlink&type=click&custom_url=<ENCODED DEST>
@@ -48,25 +52,25 @@ AMAZON_TAG = ""                   # optional: your-amazon-tag-20
 AFF = {
     "booking": {
         "dest": "https://www.booking.com/searchresults.html?ss={q}",
-        "tp": {"sub": "c84", "promo_id": "3650"},
+        "tp": {"sub": "c84", "promo_id": "3650", "joined": False},
         "direct_param": "aid", "direct_id": "",
         "label": "Check prices on Booking", "qspace": "+",
     },
     "agoda": {
         "dest": "https://www.agoda.com/search?city={q}",
-        "tp": {"sub": "c104", "promo_id": "2854"},    # verified public promo_id
+        "tp": {"sub": "c104", "promo_id": "2854", "joined": False},    # verified public promo_id
         "direct_param": "cid", "direct_id": "",
         "label": "Check prices on Agoda", "qspace": "%20",
     },
     "hostelworld": {
         "dest": "https://www.hostelworld.com/s?q={q}",
-        "tp": {"sub": "c93", "promo_id": "3518"},     # verified public promo_id
+        "tp": {"sub": "c93", "promo_id": "3518", "joined": False},     # verified public promo_id
         "direct_param": "clickref", "direct_id": "",
         "label": "Find hostels", "qspace": "+",
     },
     "gyg": {   # GetYourGuide
         "dest": "https://www.getyourguide.com/s/?q={q}",
-        "tp": {"sub": "c108", "promo_id": "3965"},    # verified public promo_id
+        "tp": {"sub": "c108", "promo_id": "3965", "joined": False},    # verified public promo_id
         "direct_param": "partner_id", "direct_id": "",
         "label": "See tours on GetYourGuide", "qspace": "+",
     },
@@ -78,7 +82,7 @@ AFF = {
     },
     "12go": {  # SE-Asia trains/buses/ferries — promo_id confirmed
         "dest": "https://12go.asia/en/travel/{q}",
-        "tp": {"sub": "c44", "promo_id": "1764"},
+        "tp": {"sub": "c44", "promo_id": "1764", "joined": False},
         "direct_param": None, "direct_id": "",
         "label": "Check times & prices on 12Go", "qspace": "-",
     },
