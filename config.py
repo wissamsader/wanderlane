@@ -63,7 +63,7 @@ AFF = {
         "label": "Check prices on Agoda", "qspace": "%20",
     },
     "hostelworld": {
-        "dest": "https://www.hostelworld.com/s?q={q}",
+        "dest": "https://www.hostelworld.com/search?search_keywords={q}",  # /s?q= 404s since 2026-07 — verified format
         "tp": {"sub": "c93", "promo_id": "3518", "joined": False},     # verified public promo_id
         "direct_param": "clickref", "direct_id": "",
         "label": "Find hostels", "qspace": "+",
@@ -107,6 +107,22 @@ AFF = {
         "direct_param": "referenceID", "direct_id": "26565169",
         "label": "Get nomad insurance (SafetyWing)", "qspace": "%20",
     },
+}
+
+# Agoda text-search URLs always bounce to the homepage, so agoda buttons resolve
+# through this map of VERIFIED static pages (all curl-checked 200 on 2026-07-20).
+# An agoda query NOT in this map falls back to a Booking search (honest label swap).
+AGODA_PAGES = {
+    "Chiang Mai":         "https://www.agoda.com/city/chiang-mai-th.html",
+    "Nimman Chiang Mai":  "https://www.agoda.com/city/chiang-mai-th.html",
+    "Da Nang":            "https://www.agoda.com/city/da-nang-vn.html",
+    "Hoi An":             "https://www.agoda.com/city/hoi-an-vn.html",
+    "Beirut":             "https://www.agoda.com/city/beirut-lb.html",
+    "Barcelona":          "https://www.agoda.com/city/barcelona-es.html",
+    "Palermo":            "https://www.agoda.com/city/palermo-it.html",
+    "Berlin":             "https://www.agoda.com/city/berlin-de.html",
+    "Anantara Hoi An Resort": "https://www.agoda.com/anantara-hoi-an-resort/hotel/hoi-an-vn.html",
+    "InterContinental Danang Sun Peninsula Resort": "https://www.agoda.com/intercontinental-danang-sun-peninsula-resort/hotel/da-nang-vn.html",
 }
 
 # Dot-marquee vocabulary per city (renders as the italic ticker strip on hubs)

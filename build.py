@@ -9,7 +9,7 @@ Run:  python3 build.py
 Add a city/article: drop a dict into content/*.py -> rebuild -> push.
 """
 import os, re, shutil, html, importlib.util, datetime, glob, urllib.parse
-from config import BRAND, BASE_URL, TAGLINE, CITIES, AFF, SOCIAL, CONTACT, TP_MARKER, USE_TP, BASE_PATH
+from config import BRAND, BASE_URL, TAGLINE, CITIES, AFF, SOCIAL, CONTACT, TP_MARKER, USE_TP, BASE_PATH, AGODA_PAGES
 try:
     from config import ANALYTICS, GSC_VERIFY
 except ImportError:
@@ -71,6 +71,12 @@ def aff_label(program, fallback="Check prices"):
 def aff_button(program, target=None, query=None, label=None, style="btn-book", small=False):
     if not program:
         return ""
+    if program == "agoda" and not (target and str(target).startswith("http")):
+        mapped = AGODA_PAGES.get((query or "").strip())
+        if mapped:
+            target = mapped
+        else:  # Agoda text-search is broken (bounces to homepage) — honest fallback
+            program = "booking"
     href = aff_link(program, target, query)
     lab = label or aff_label(program)
     cls = "btn " + style + (" btn-sm" if small else "")
