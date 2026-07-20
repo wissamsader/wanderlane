@@ -109,6 +109,30 @@ AFF = {
     },
 }
 
+# Hostelworld killed text-search GETs (both /s?q= and search?search_keywords land
+# useless), so hostel buttons resolve through VERIFIED property/city pages
+# (every URL below curl-checked 200 → exact page, 2026-07-20).
+HW_STAYS = {
+    "Stamps Backpackers Chiang Mai": "https://www.hostelworld.com/hostels/p/265137/stamps-backpackers-chiang-mai/",
+    "Mad Monkey Chiang Mai":         "https://www.hostelworld.com/hostels/p/318111/mad-monkey-chiang-mai/",
+    "The Common Hostel Chiang Mai":  "https://www.hostelworld.com/hostels/p/273677/the-common-hostel/",
+    "Hostel Lullaby Chiang Mai":     "https://www.hostelworld.com/hostels/p/285374/hostel-lullaby-non-smoking/",
+    "About A Bed Chiang Mai":        "https://www.hostelworld.com/hostels/p/282288/about-a-bed-hostel-chiangmai/",
+    # card is "Nimman Nest / Bed Addict"; Nimman Nest is delisted on HW (redirects
+    # to city page) so the card's second named pick gets the link
+    "Nimman Nest Chiang Mai":        "https://www.hostelworld.com/hostels/p/286400/bed-addict-hostel/",
+    "Kon Tiki Hostel Da Nang":       "https://www.hostelworld.com/hostels/p/278584/kon-tiki-danang-hostel/",
+}
+HW_CITY_PAGES = {
+    "Chiang Mai": "https://www.hostelworld.com/hostels/asia/thailand/chiang-mai/",
+    "Da Nang":    "https://www.hostelworld.com/hostels/asia/vietnam/da-nang/",
+    "Hoi An":     "https://www.hostelworld.com/hostels/asia/vietnam/hoi-an/",
+    "Barcelona":  "https://www.hostelworld.com/hostels/europe/spain/barcelona/",
+    "Berlin":     "https://www.hostelworld.com/hostels/europe/germany/berlin/",
+    "Palermo":    "https://www.hostelworld.com/hostels/europe/italy/palermo/",
+    "Beirut":     "https://www.hostelworld.com/hostels/asia/lebanon/beirut/",
+}
+
 # Agoda text-search URLs always bounce to the homepage, so agoda buttons resolve
 # through this map of VERIFIED static pages (all curl-checked 200 on 2026-07-20).
 # An agoda query NOT in this map falls back to a Booking search (honest label swap).

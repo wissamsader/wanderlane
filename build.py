@@ -9,7 +9,7 @@ Run:  python3 build.py
 Add a city/article: drop a dict into content/*.py -> rebuild -> push.
 """
 import os, re, shutil, html, importlib.util, datetime, glob, urllib.parse
-from config import BRAND, BASE_URL, TAGLINE, CITIES, AFF, SOCIAL, CONTACT, TP_MARKER, USE_TP, BASE_PATH, AGODA_PAGES
+from config import BRAND, BASE_URL, TAGLINE, CITIES, AFF, SOCIAL, CONTACT, TP_MARKER, USE_TP, BASE_PATH, AGODA_PAGES, HW_STAYS, HW_CITY_PAGES
 try:
     from config import ANALYTICS, GSC_VERIFY
 except ImportError:
@@ -76,6 +76,14 @@ def aff_button(program, target=None, query=None, label=None, style="btn-book", s
         if mapped:
             target = mapped
         else:  # Agoda text-search is broken (bounces to homepage) — honest fallback
+            program = "booking"
+    if program == "hostelworld" and not (target and str(target).startswith("http")):
+        q = (query or "").strip()
+        mapped = HW_STAYS.get(q) or HW_CITY_PAGES.get(q)
+        if mapped:
+            target = mapped
+        else:  # HW has no working text-search GET; unmapped = broken promise, flag it
+            print(f"WARN: unmapped hostelworld query {q!r} — add to HW_STAYS/HW_CITY_PAGES; using Booking fallback")
             program = "booking"
     href = aff_link(program, target, query)
     lab = label or aff_label(program)
