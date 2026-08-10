@@ -18,3 +18,11 @@ card) and `docs/sitemap.xml` (new URL) were hand-patched to match what a
 correct build would produce. Every other existing page in `docs/` is
 untouched. Whoever runs `build.py` next from a machine with `BIZ_REPOS`
 present should do a full rebuild to reconcile any drift.
+
+## 2026-08-10
+no-op: all cities covered. Excluding Damascus, every non-Chiang-Mai city
+(Barcelona, Beirut, Berlin, Palermo, Vietnam) is tied for fewest published
+articles at 4 each, and every one of those tied cities already has a
+where-to-stay-*, a best-things-to-do-*, and a 3-days/itinerary guide (plus a
+where-to-eat guide). Per the priority rule, no new article was warranted
+this run — no content files were added or modified.
