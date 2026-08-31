@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-08-31
+Weekly guide: with last week's Beirut addition, Berlin, Palermo and Vietnam
+are now tied for fewest published articles (4 each, excluding Damascus by
+design). Per the type ladder (where-to-stay → best-things-to-do → itinerary
+→ best-time-to-visit → getting-around → on-a-budget → day-trips-from), all
+three tied cities already have a-c; none had a best-time-to-visit-* guide,
+so that's the type this run adds. Picked Berlin (first alphabetically among
+the tied cities). Added `content/berlin-auto.py` — **Best Time to Visit
+Berlin** (`/berlin/best-time-to-visit-berlin/`) — built only from facts in
+`research/city-berlin.md`'s "Best time to visit" section (climate stats)
+plus the Berlin Marathon and Christmas-market facts already used
+consistently across the other Berlin guides.
+
+Note on this run: same known issue as every prior run — this environment
+doesn't have the `BIZ_REPOS` local photo source directory that `build.py`'s
+`eat_photo()`/`thumb_pool()` read from, so a full `python3 build.py` here
+silently replaces real business photos with placeholder cards across every
+existing city page, not just Berlin's. `python3 build.py` was run and
+confirmed clean (30 articles, one more than before); afterward every
+modified file *except* the new article's own output directory
+(`docs/berlin/best-time-to-visit-berlin/`, which has no photo dependency)
+was reverted with `git checkout --`. `docs/berlin/index.html` (guide count
+5→6, new "Go deeper" card using `berlin-malek-al-konafeh.jpg` — the exact
+photo the real `thumb_pool()` rotation would pick, since all 15 Berlin
+business photos are already committed in `docs/assets/eats/`) and
+`docs/sitemap.xml` (new URL) were hand-patched to match what a correct
+build would produce. Every other existing page in `docs/` is untouched.
+Whoever runs `build.py` next from a machine with `BIZ_REPOS` present should
+do a full rebuild to reconcile any drift.
+
+PIN NEEDED: pin-berlin-best-time.png -> /berlin/best-time-to-visit-berlin/ (Berlin)
+
 ## 2026-08-24
 Weekly guide: Barcelona pulled ahead last week (5 articles), leaving Beirut,
 Berlin, Palermo and Vietnam tied for fewest published articles (4 each,
