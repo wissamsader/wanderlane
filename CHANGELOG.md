@@ -1,5 +1,40 @@
 # Changelog
 
+## 2026-09-07
+Weekly guide: with Berlin's best-time-to-visit addition last week, Palermo
+and Vietnam are now tied for fewest published articles (4 each, excluding
+Damascus by design). Per the type ladder (where-to-stay → best-things-to-do
+→ itinerary → best-time-to-visit → getting-around → on-a-budget →
+day-trips-from), both tied cities already have a-c; neither had a
+best-time-to-visit-* guide, so that's the type this run adds. Picked
+Palermo (first alphabetically among the tied cities, same tie-break rule
+as prior runs). Added `content/palermo-auto.py` — **Best Time to Visit
+Palermo** (`/palermo/best-time-to-visit-palermo/`) — built only from facts
+in `research/city-palermo.md`'s Section B6 (climate/season data) plus the
+market-hours and family-run-closure notes already used consistently across
+the other Palermo guides (Ballarò hours, Carizzi d'amuri/No zu Totó Tuesday
+closures, the Wikivoyage driving warning).
+
+Note on this run: same known issue as every prior run — this environment
+doesn't have the `BIZ_REPOS` local photo source directory that `build.py`'s
+`eat_photo()`/`thumb_pool()` read from, so a full `python3 build.py` here
+silently replaces real business photos with placeholder cards across every
+existing city page, not just Palermo's. `python3 build.py` was run and
+confirmed clean (31 articles, one more than before); afterward every
+modified file *except* the new article's own output directory
+(`docs/palermo/best-time-to-visit-palermo/`, which has no photo dependency)
+was reverted with `git checkout --`. `docs/palermo/index.html` (guide count
+5→6, new "Go deeper" card using `palermo-friggitoria-chiluzzo.jpg` — the
+exact photo the real `thumb_pool()` rotation would pick, since all of
+Palermo's business photos are already committed in `docs/assets/eats/`)
+and `docs/sitemap.xml` (new URL, inserted in place rather than letting the
+full rebuild reorder every existing entry) were hand-patched to match what
+a correct build would produce. Every other existing page in `docs/` is
+untouched. Whoever runs `build.py` next from a machine with `BIZ_REPOS`
+present should do a full rebuild to reconcile any drift.
+
+PIN NEEDED: pin-palermo-best-time.png -> /palermo/best-time-to-visit-palermo/ (Palermo)
+
 ## 2026-08-31
 Weekly guide: with last week's Beirut addition, Berlin, Palermo and Vietnam
 are now tied for fewest published articles (4 each, excluding Damascus by
