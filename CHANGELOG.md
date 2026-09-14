@@ -1,5 +1,40 @@
 # Changelog
 
+## 2026-09-14
+Weekly guide: with Palermo's best-time-to-visit addition last week, Vietnam
+(Da Nang & Hoi An) is now the sole city with the fewest published articles
+(4, excluding Damascus by design). Per the type ladder (where-to-stay →
+best-things-to-do → itinerary → best-time-to-visit → getting-around →
+on-a-budget → day-trips-from), Vietnam already has a-c (where-to-stay,
+best-things-to-do, the 4-day itinerary); it had no best-time-to-visit-*
+guide, so that's the type this run adds. Added `content/vietnam-auto.py` —
+**Best Time to Visit Da Nang & Hoi An**
+(`/vietnam/best-time-to-visit-da-nang-hoi-an/`) — built only from facts in
+`research/city-vietnam.md`'s Section B7 (the Feb–May dry-season window,
+the June–August heat/humidity trade-off, and the well-documented
+October–November flood risk in Hoi An's Ancient Town, already used
+consistently in the other Vietnam guides).
+
+Note on this run: same known issue as every prior run — this environment
+doesn't have the `BIZ_REPOS` local photo source directory that `build.py`'s
+`eat_photo()`/`thumb_pool()` read from, so a full `python3 build.py` here
+silently replaces real business photos with placeholder cards across every
+existing city page, not just Vietnam's. `python3 build.py` was run and
+confirmed clean (32 articles, one more than before); afterward every
+modified file *except* the new article's own output directory
+(`docs/vietnam/best-time-to-visit-da-nang-hoi-an/`, which has no photo
+dependency) was reverted with `git checkout --`. `docs/vietnam/index.html`
+(guide count 5→6, new "Go deeper" card) and `docs/sitemap.xml` (new URL,
+inserted in place rather than letting the full rebuild reorder every
+existing entry) were hand-patched — byte-diffed against a full rebuild's
+output to confirm the only remaining differences were the known photo
+regression — to match what a correct build would produce. Every other
+existing page in `docs/` is untouched. Whoever runs `build.py` next from a
+machine with `BIZ_REPOS` present should do a full rebuild to reconcile any
+drift.
+
+PIN NEEDED: pin-vietnam-best-time.png -> /vietnam/best-time-to-visit-da-nang-hoi-an/ (Vietnam)
+
 ## 2026-09-07
 Weekly guide: with Berlin's best-time-to-visit addition last week, Palermo
 and Vietnam are now tied for fewest published articles (4 each, excluding
