@@ -1,5 +1,50 @@
 # Changelog
 
+## 2026-09-21
+Weekly guide: excluding Damascus, Barcelona, Beirut, Berlin, Palermo and
+Vietnam are all tied for fewest published articles (5 each) — Chiang Mai
+is ahead with 6. Per the type ladder (where-to-stay → best-things-to-do →
+itinerary → best-time-to-visit → getting-around → on-a-budget →
+day-trips-from), all five tied cities now have a-d (every one has a
+best-time-to-visit-* guide as of last week's Vietnam addition); none had a
+getting-around-* guide, so that's the type this run adds — the first time
+the ladder has reached past best-time-to-visit. Picked Barcelona (first
+alphabetically among the tied cities, same tie-break rule as prior runs).
+Added `content/barcelona-auto2.py` (`barcelona-auto.py` was already taken
+by the best-time-to-visit guide) — **Getting Around Barcelona: Airport,
+Metro & What to Skip** (`/barcelona/getting-around-barcelona/`) — built
+only from facts in `research/city-barcelona.md` §B5 (the El Prat airport
+basics, the Aerobús fare/frequency range, the R2 Nord rail alternative,
+the T-casual multi-trip card, and the old-town walkability note already
+used consistently across the other Barcelona guides). The research brief's
+own Low-confidence item — the exact current T-casual card price — was
+left out entirely rather than guessed; the article describes the card
+functionally instead.
+
+Note on this run: same known issue as every prior run — this environment
+doesn't have the `BIZ_REPOS` local photo source directory that `build.py`'s
+`eat_photo()`/`thumb_pool()` read from, so a full `python3 build.py` here
+silently replaces real business photos with placeholder cards across every
+existing city page, not just Barcelona's. `python3 build.py` was run and
+confirmed clean (33 articles, one more than before); afterward every
+modified file *except* the new article's own output directory
+(`docs/barcelona/getting-around-barcelona/`, which has no photo dependency)
+was reverted with `git checkout --`. `docs/barcelona/index.html` (guide
+count 6→7, new "Go deeper" card using `barcelona-la-taberna-de-la-
+barceloneta.jpg` — the exact photo the real `thumb_pool()` rotation would
+pick next, since all of Barcelona's business photos are already committed
+in `docs/assets/eats/`) and `docs/sitemap.xml` (new URL, inserted in place
+rather than letting the full rebuild reorder every existing entry) were
+hand-patched to match what a correct build would produce. `docs/index.html`
+(the home page's per-city guide count) was left untouched, consistent with
+every prior run — it has been out of sync with the real per-city article
+counts since before this run and reconciling it is out of scope for a
+single-article patch. Every other existing page in `docs/` is untouched.
+Whoever runs `build.py` next from a machine with `BIZ_REPOS` present should
+do a full rebuild to reconcile any drift.
+
+PIN NEEDED: pin-barcelona-getting-around.png -> /barcelona/getting-around-barcelona/ (Barcelona)
+
 ## 2026-09-14
 Weekly guide: with Palermo's best-time-to-visit addition last week, Vietnam
 (Da Nang & Hoi An) is now the sole city with the fewest published articles
