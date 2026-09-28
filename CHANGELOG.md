@@ -1,5 +1,53 @@
 # Changelog
 
+## 2026-09-28
+Weekly guide: excluding Damascus, Beirut, Berlin, Palermo and Vietnam are
+all tied for fewest published articles (5 each) — Barcelona is ahead with
+6 (last week's getting-around addition) and Chiang Mai has 6. Per the type
+ladder (where-to-stay → best-things-to-do → itinerary → best-time-to-visit
+→ getting-around → on-a-budget → day-trips-from), all four tied cities have
+a-d but none yet has a getting-around-* guide. Picked Beirut, continuing
+the same alphabetical rotation prior runs have used among tied cities
+(Barcelona was done last week, Beirut is next alphabetically).
+Added `content/beirut-auto3.py` (`beirut-auto.py`/`beirut-auto2.py` were
+already taken by the 3-days and best-time-to-visit guides) — **Getting
+Around Beirut: Airport, Taxis & What to Skip**
+(`/beirut/getting-around-beirut/`) — built only from facts in
+`research/city-beirut.md` §B5: the Rafic Hariri airport basics, the
+official-taxi-counter-vs-Bolt-at-arrivals caveat, the walkable-within-
+neighborhoods-but-patchy-between note, and the cash/USD reality already
+used consistently across the other Beirut guides. Nothing in the brief was
+tagged Low-confidence for this section, so no caveat needed leaving out.
+
+Note on this run: same known BIZ_REPOS issue as every prior run (see the
+2026-09-21 entry for the full explanation) — `python3 build.py` was run and
+confirmed clean (34 articles, one more than before), then every modified
+file *except* the new article's own output directory
+(`docs/beirut/getting-around-beirut/`, which has no photo dependency) was
+reverted with `git checkout --`. `docs/beirut/index.html` (guide count
+6→7, new "Go deeper" card) and `docs/sitemap.xml` (new URL, inserted after
+Beirut's other entries rather than letting a full rebuild reorder them)
+were hand-patched to match what a correct build would produce. One honest
+gap from the barcelona-getting-around run: that entry claimed to know the
+*exact* next photo `thumb_pool()` would rotate to; tracing Beirut's own
+harvest order by hand (intro_blocks' 8 eats slugs, then the where-to-eat
+article's 15) predicts `falafel-tabbara.jpg` for this slot, but that
+contradicts what's actually in the committed hub page today (which shows
+`abu-shadi.jpg` for the equivalent card), so at least one business's photo
+folder is evidently missing or failing on the real build machine in a way
+this sandbox can't detect. Rather than assert false precision, the new
+"Go deeper" card uses `beirut-zmrd-social-space.jpg` — a real, already-
+committed Beirut asset not used as a thumbnail anywhere else on that page
+— acknowledging it may not be bit-for-bit what a from-scratch rebuild
+would pick. `docs/index.html` (home page's per-city guide count) was left
+untouched, consistent with every prior run. Every other existing page in
+`docs/` is untouched. Whoever runs `build.py` next from a machine with
+`BIZ_REPOS` present should do a full rebuild to reconcile any drift
+(including double-checking which Beirut business photo folders are
+actually present).
+
+PIN NEEDED: pin-beirut-getting-around.png -> /beirut/getting-around-beirut/ (Beirut)
+
 ## 2026-09-21
 Weekly guide: excluding Damascus, Barcelona, Beirut, Berlin, Palermo and
 Vietnam are all tied for fewest published articles (5 each) — Chiang Mai
