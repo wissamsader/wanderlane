@@ -1,5 +1,52 @@
 # Changelog
 
+## 2026-10-05
+Weekly guide: excluding Damascus, Berlin, Palermo and Vietnam are tied for
+fewest published articles (5 each) — Barcelona and Beirut are ahead with 6
+(last two weeks' getting-around additions) and Chiang Mai has 6. Per the
+type ladder (where-to-stay → best-things-to-do → itinerary →
+best-time-to-visit → getting-around → on-a-budget → day-trips-from), all
+three tied cities have a-d but none yet has a getting-around-* guide.
+Picked Berlin, continuing the same alphabetical rotation prior runs have
+used among tied cities (Barcelona and Beirut already got their
+getting-around guides in the two prior runs; Berlin is next alphabetically
+among the remaining tied trio).
+Added `content/berlin-auto2.py` (`berlin-auto.py` was already taken by the
+best-time-to-visit guide) — **Getting Around Berlin: Airport, Transit &
+What to Skip** (`/berlin/getting-around-berlin/`) — built only from facts
+in `research/city-berlin.md`'s "Getting there / around" section: the BER
+airport basics (Airport Express/FEX frequency and timing, the S9/S45
+S-Bahn alternative, regional trains), the BVG network and Berlin's
+bikeability, and the Berlin WelcomeCard caveat (the brief itself flags its
+pricing as MEDIUM confidence/"verify before publishing," so the article
+says to price it against single tickets rather than stating a number).
+Nothing else in that section was tagged Low-confidence, so no other caveat
+needed leaving out.
+
+Note on this run: same known BIZ_REPOS issue as every prior run (see the
+2026-09-21 entry for the full explanation) — `python3 build.py` was run and
+confirmed clean (35 articles, one more than before), then every modified
+file *except* the new article's own output directory
+(`docs/berlin/getting-around-berlin/`, which has no photo dependency) was
+reverted with `git checkout --`. `docs/berlin/index.html` (guide count
+6→7, new "Go deeper" card) and `docs/sitemap.xml` (new URL, inserted after
+Berlin's other entries rather than letting a full rebuild reorder them)
+were hand-patched to match what a correct build would produce. The new
+card's thumbnail (`berlin-al-madina-markt.jpg`) was derived by hand-tracing
+`thumb_pool()`'s real rotation order (hero image, then the first six
+distinct eats slugs in `city_slugs()` harvest order whose photo folders
+exist) rather than guessed — it's the 7th pool slot, landing on the new
+card via `pool[(i+1) % len(pool)]` with i=5. While hand-patching, also
+fixed a pre-existing malformed-HTML bug already present in the committed
+`docs/berlin/index.html` (a missing `</div>` after "places we vouch for",
+left over from some earlier patch) to match what current `build.py` code
+actually emits — a one-tag correction, not a content change. Every other
+existing page in `docs/` is untouched. Whoever runs `build.py` next from a
+machine with `BIZ_REPOS` present should do a full rebuild to reconcile any
+drift (including double-checking Berlin's business photo folders).
+
+PIN NEEDED: pin-berlin-getting-around.png -> /berlin/getting-around-berlin/ (Berlin)
+
 ## 2026-09-28
 Weekly guide: excluding Damascus, Beirut, Berlin, Palermo and Vietnam are
 all tied for fewest published articles (5 each) — Barcelona is ahead with
