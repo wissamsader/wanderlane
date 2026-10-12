@@ -1,5 +1,44 @@
 # Changelog
 
+## 2026-10-12
+Weekly guide: excluding Damascus, Palermo and Vietnam are now tied for
+fewest published articles (5 each) — Berlin joined Barcelona and Beirut at
+6 last week. Per the type ladder (where-to-stay → best-things-to-do →
+itinerary → best-time-to-visit → getting-around → on-a-budget →
+day-trips-from), both tied cities have a-d but neither yet has a
+getting-around-* guide. Picked Palermo, alphabetically first of the tied
+pair.
+Added `content/palermo-auto2.py` (`palermo-auto.py` was already taken by
+the best-time-to-visit guide) — **Getting Around Palermo: Airport, Transit
+& What to Skip** (`/palermo/getting-around-palermo/`) — built only from
+facts in `research/city-palermo.md` §B5 ("Getting there / around"): the
+Falcone–Borsellino airport basics (train frequency/hours, the Prestia e
+Comandè shuttle, taxi timing), the historic core's walkability plus the
+free Centro Storico loop bus and ~€4 AMAT day ticket, and the Wikivoyage
+driving warning already used consistently on the Palermo hub and other
+Palermo guides. The research brief flags exact current shuttle-bus and
+taxi fares as `[CHECK]`/unverified, so the article gives timing and the
+"agree the fare first" caveat without stating a number for either.
+
+Note on this run: same known BIZ_REPOS issue as every prior run (see the
+2026-09-21 entry for the full explanation) — `python3 build.py` was run and
+confirmed clean (36 articles, one more than before), then every modified
+file *except* the new article's own output directory
+(`docs/palermo/getting-around-palermo/`, which has no photo dependency)
+was reverted with `git checkout --`. `docs/palermo/index.html` (guide
+count 6→7, new "Go deeper" card) and `docs/sitemap.xml` (new URL, inserted
+after Palermo's other entries) were hand-patched to match what a correct
+build would produce. The new card's thumbnail
+(`palermo-trattoria-al-sorriso.jpg`) was derived by hand-tracing
+`thumb_pool()`'s real rotation (hero image, then the 6 eats slugs from the
+hub's own featured-eats block, in order) rather than guessed — it's
+`pool[(i+1) % len(pool)]` with i=5, landing on pool slot 6
+(trattoria-al-sorriso). Every other existing page in `docs/` is untouched.
+Whoever runs `build.py` next from a machine with `BIZ_REPOS` present should
+do a full rebuild to reconcile any drift.
+
+PIN NEEDED: pin-palermo-getting-around.png -> /palermo/getting-around-palermo/ (Palermo)
+
 ## 2026-10-05
 Weekly guide: excluding Damascus, Berlin, Palermo and Vietnam are tied for
 fewest published articles (5 each) — Barcelona and Beirut are ahead with 6
