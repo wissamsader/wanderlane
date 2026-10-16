@@ -818,7 +818,7 @@ def load_content():
 
 def sitemap():
     urls = [""] + [f'{c["id"]}/' for c in CITIES] + [f'{p["city"]}/{p["slug"]}/' for p in ALL_PAGES] \
-           + ["about/", "disclosure/", "privacy/"]
+           + ["about/", "disclosure/", "privacy/", "open-eye/"]
     today = "2026-07-18"
     body = "".join(f'<url><loc>{wl_url(u)}</loc><lastmod>{today}</lastmod>'
                    f'<priority>{"1.0" if u=="" else "0.8" if u.count("/")<=1 else "0.7"}</priority></url>' for u in urls)
@@ -832,8 +832,15 @@ def copy_static():
     dst = os.path.join(SITE, "assets")
     shutil.copytree(src, dst, dirs_exist_ok=True, ignore=shutil.ignore_patterns(".*"))
 
+def copy_extras():
+    """Standalone pages that live beside the guides (extras/<name>/ -> docs/<name>/), e.g. Open Eye."""
+    src = os.path.join(ROOT, "extras")
+    if os.path.isdir(src):
+        shutil.copytree(src, SITE, dirs_exist_ok=True, ignore=shutil.ignore_patterns(".*"))
+
 def static_files():
     copy_static()
+    copy_extras()
     with open(os.path.join(SITE, "CNAME"), "w") as f:      # GitHub Pages custom domain
         f.write("wanderlane.space\n")
     with open(os.path.join(SITE, "wanderlane2026seed.txt"), "w") as f:   # IndexNow key file
