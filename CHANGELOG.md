@@ -1,5 +1,58 @@
 # Changelog
 
+## 2026-10-19
+Weekly guide: excluding Damascus, Vietnam (Da Nang & Hoi An) now has the
+fewest published articles (5) of any city — Palermo joined the others at 6
+last week. Per the type ladder (where-to-stay → best-things-to-do →
+itinerary → best-time-to-visit → getting-around → on-a-budget →
+day-trips-from), Vietnam already had a-d (where-to-stay-da-nang-hoi-an,
+best-things-to-do-da-nang-hoi-an, da-nang-hoi-an-itinerary,
+best-time-to-visit-da-nang-hoi-an) but no getting-around-* guide.
+Added `content/vietnam-auto2.py` (`vietnam-auto.py` and `vietnam-more.py`
+were already taken) — **Getting Around Da Nang & Hoi An: Airport, Grab &
+Scooters** (`/vietnam/getting-around-da-nang-hoi-an/`) — built only from
+facts in `research/city-vietnam.md` §B6 ("Getting There & Around"): Da
+Nang International Airport (DAD) as the only airport serving both cities,
+the airport/Da Nang → Hoi An transfer options (Grab, metered taxi, shared
+shuttle) with their research-flagged `[M]`-confidence VND ranges kept as
+explicit ballparks rather than stated as settled fares, scooter rental
+pricing and the IDP requirement, Mai Linh/Vinasun as the Da Nang taxi
+fallback, and Hoi An Ancient Town's walking/motorbike-restricted core with
+bicycle rental. 12Go (used elsewhere in the network for inter-city
+transport) was deliberately left out — Vietnam's existing content has
+never used that affiliate key, and the ladder rule says to use only the
+keys a city's content already uses; 12Go is mentioned nowhere since Grab
+covers the same transfer and isn't an affiliate program in `config.py`
+either. The one hotel-booking "book" block uses `agoda`, already used
+throughout `content/vietnam*.py`.
+
+Note on this run: same known BIZ_REPOS issue as every prior run (see the
+2026-08-09 entry for the full explanation) — this sandbox has no
+`~/CLAUDE-DEEPSEEK/business website github` directory, so `eat_photo()`/
+`thumb_pool()` can't find real business photos and a full `python3
+build.py` silently swaps every existing "Featured" business photo for a
+placeholder card across *every* city page, not just Vietnam's. `build.py`
+was run and confirmed clean (37 articles, one more than before, 0 errors),
+then every modified file *except* the new article's own output directory
+(`docs/vietnam/getting-around-da-nang-hoi-an/`, which has no eats-photo
+dependency) was reverted with `git checkout --`. `docs/vietnam/index.html`
+(guide count 6→7, new "Go deeper" card) and `docs/sitemap.xml` (new URL,
+inserted after Vietnam's other entries) were hand-patched to match what a
+correct build would produce. The new card's thumbnail uses
+`/assets/heroes/vietnam.jpg` — a real, already-deployed asset also used by
+2 of the hub's existing 5 cards — rather than guessing at a specific
+`thumb_pool()` rotation index: hand-tracing that rotation against Vietnam's
+own existing cards (only 2 real eats slugs exist — `banh-xeo-ba-duong` and
+`bun-cha-ca-109` — so the pool should cycle hero/banh-xeo/bun-cha-ca) didn't
+actually reproduce all 5 of the already-committed cards' real image
+choices, so a guessed index for the 6th card wasn't trustworthy either; the
+safe, verified-to-exist hero fallback was used instead. Every other
+existing page in `docs/` is untouched. Whoever runs `build.py` next from a
+machine with `BIZ_REPOS` present should do a full rebuild to reconcile any
+drift (including, possibly, this card's thumbnail).
+
+PIN NEEDED: pin-vietnam-getting-around.png -> /vietnam/getting-around-da-nang-hoi-an/ (Da Nang & Hoi An)
+
 ## 2026-10-12
 Weekly guide: excluding Damascus, Palermo and Vietnam are now tied for
 fewest published articles (5 each) — Berlin joined Barcelona and Beirut at
