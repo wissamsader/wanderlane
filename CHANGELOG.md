@@ -1,5 +1,68 @@
 # Changelog
 
+## 2026-10-26
+Weekly guide: excluding Damascus, Barcelona, Beirut, Berlin, Palermo and
+Vietnam are all tied for fewest published articles (6 each). Chiang Mai has
+only 6 too but was excluded from the count entirely — there is no
+`research/city-chiangmai.md` in this checkout, so any new Chiang Mai article
+would mean inventing facts, which the hard rule forbids. Among the five tied,
+real-remaining-eligible cities, all five are also tied on the type ladder:
+every one already has where-to-stay → best-things-to-do → itinerary →
+best-time-to-visit → getting-around (a–e), and none has an on-a-budget (f)
+or day-trips-from (g) guide yet. Breaking the tie by the network's existing
+rotation order (barcelona → beirut → berlin → palermo → vietnam, visible in
+this file's own history for both the best-time-to-visit and getting-around
+passes), Barcelona is next up.
+
+Added `content/barcelona-auto3.py` (`barcelona-auto.py` and
+`barcelona-auto2.py` were already taken) — **Barcelona on a Budget: What It
+Actually Costs** (`/barcelona/barcelona-on-a-budget/`) — built only from
+facts in `research/city-barcelona.md`: the two confirmed menú del día prices
+(Chez Lola €12.90, Restaurant l'Andreuenc ~€18, both already featured
+businesses in `content/barcelona.py`), the Aerobus airport-transfer price
+band (~€6–7, marked Medium confidence in the brief, used as a ballpark not a
+quote), and the Section B2 hotel price bands (mid-range ~$157–188, boutique
+~$305, luxury ~$938, all High confidence from a live Booking.com fetch).
+Two things were deliberately left out rather than guessed: the brief's own
+Low–Medium-confidence T-casual metro card price, and any nightly rate for
+the budget hostels (Hostal Santa Ana, Somnio Hostels) — the brief lists
+their ratings but never captured a price, so the article names them and
+says so plainly instead of inventing one. The free-things-to-do and
+when-to-go-cheaper sections reuse only Section B3/B6 facts (Gothic Quarter
+walking, La Boqueria mornings, Barceloneta beach, winter being both the
+quietest and cheapest season) and the overtourism note from B6 to connect
+"spend less" with "spend it on the right neighborhoods." Only the `booking`
+affiliate key is used, matching every other Barcelona content file — no
+`hostelworld`, `agoda`, `12go` or other key gets introduced here since
+Barcelona's existing content has never used them.
+
+Note on this run: same known BIZ_REPOS issue as every prior run (see the
+2026-08-09 entry for the full explanation) — this sandbox has no
+`~/CLAUDE-DEEPSEEK/business website github` checkout, so a plain `python3
+build.py` makes every featured-business photo disappear network-wide
+(falling back to the repeated hero image or the "no pic" stamp) and the
+homepage/city-hub "N guides" counters recompute from whatever's actually in
+`content/*.py` today. On inspection, several of those counters in the
+currently-committed `docs/` were already stale before this run (e.g. the
+homepage's Barcelona/Beirut/Berlin/Palermo/Vietnam city-card counts), which
+this run did not attempt to fix — out of scope for a single weekly article,
+and not worth a guess at the right number. To avoid shipping the photo
+regression or touching that pre-existing drift, `docs/` was **not**
+bulk-rebuilt this run. Only the new article's own output directory
+(`docs/barcelona/barcelona-on-a-budget/`) was kept from a full local build;
+`docs/barcelona/index.html` (guide count 7→8, plus a new "Go deeper" card)
+and `docs/sitemap.xml` (new URL) were hand-patched to match what a correct
+build would produce, reusing the same real photo (`barcelona-bar-marsella.jpg`)
+the thumbnail-cycling logic would have picked for card index 6 of a
+6-photo pool. Every other existing page in `docs/` is untouched. The new
+article's own eats cards (Chez Lola, Restaurant l'Andreuenc) do fall back to
+the "no pic" placeholder here, since there's no prior correct version of
+that page to preserve — whoever runs `build.py` next from a machine with
+`BIZ_REPOS` present should do a full rebuild to pick up its real photos and
+reconcile the pre-existing homepage-counter drift noted above.
+
+PIN NEEDED: pin-barcelona-budget.png -> /barcelona/barcelona-on-a-budget/ (Barcelona)
+
 ## 2026-10-19
 Weekly guide: excluding Damascus, Vietnam (Da Nang & Hoi An) now has the
 fewest published articles (5) of any city — Palermo joined the others at 6
