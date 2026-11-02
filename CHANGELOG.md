@@ -1,5 +1,62 @@
 # Changelog
 
+## 2026-11-02
+Weekly guide: excluding Damascus, Beirut, Berlin, Palermo and Vietnam are
+all tied for fewest published articles (6 each) now that last week's run
+brought Barcelona to 7. Chiang Mai also sits at 6 but was excluded from the
+count entirely — there is still no `research/city-chiangmai.md` in this
+checkout, so any new Chiang Mai article would mean inventing facts, which
+the hard rule forbids. Among the four tied, real-remaining-eligible cities,
+all four are tied on the type ladder too: each already has where-to-stay →
+best-things-to-do → itinerary → best-time-to-visit → getting-around (a–e),
+and none has an on-a-budget (f) or day-trips-from (g) guide yet. Breaking
+the tie by the network's existing rotation order (barcelona → beirut →
+berlin → palermo → vietnam, visible in this file's own history for the
+best-time-to-visit, getting-around and now on-a-budget passes), Beirut is
+next up.
+
+Added `content/beirut-auto4.py` (`beirut-auto.py`, `beirut-auto2.py` and
+`beirut-auto3.py` were already taken) — **Beirut on a Budget: What It
+Actually Costs** (`/beirut/beirut-on-a-budget/`) — built only from facts in
+`research/city-beirut.md`: the Section B2 hotel price bands already used
+elsewhere in `content/beirut*.py` (Queens Suite Hotel $70–90, The
+Smallville Hotel ~$200, Saifi Suites Hotel ~£137, Hotel Albergo ~£380,
+InterContinental Phoenicia ~£220, Hamra Urban Gardens left as an
+unconfirmed "Budget" tier rather than a guessed number), and the Section B5
+cash-and-USD reality (card acceptance inconsistent outside upscale venues,
+ATM withdrawals unreliable, bring small crisp USD) as the article's central
+budget fact, since that shapes spending here more than any single price.
+Two things were deliberately left out rather than guessed: any specific
+meal/dish price (Section A has ratings and review counts for all 50
+featured businesses but no `$` figures) and any specific taxi/Bolt fare
+(Section B5 describes the mechanism — agree the fare, Bolt is metered — but
+never states a number). Both gaps are named explicitly in the article
+instead of invented. The free-things-to-do section reuses only Section
+B3/B1 facts (Corniche, Beirut Souks, Bourj Hammoud wander, Horsh Beirut
+with its own access-hours caveat kept intact) and flags that the National
+and Sursock museums are self-ticketed without a confirmed entry price. Only
+the `booking` and `gyg`-adjacent (none used here) affiliate keys already
+used in Beirut's existing content appear — no new program is introduced.
+
+Note on this run: same known BIZ_REPOS issue as every prior run (see the
+2026-08-09 entry for the full explanation) — this sandbox has no
+`~/CLAUDE-DEEPSEEK/business website github` checkout, so a plain `python3
+build.py` makes every featured-business photo on every existing page fall
+back to a placeholder or the hero image, and recomputes guide counts from
+whatever's in `content/*.py` today. `build.py` was run and confirmed clean
+(39 articles, one more than before, 0 errors), then every file it touched
+*except* the new article's own output directory
+(`docs/beirut/beirut-on-a-budget/`, which has no eats-photo dependency) was
+reverted to its committed state. `docs/beirut/index.html` (guide count
+7→8, plus a new "Go deeper" card reusing the already-committed, already
+on-page `beirut-kahwet-60.jpg` real photo rather than guessing which photo
+a BIZ_REPOS-backed thumbnail cycle would have picked) and `docs/sitemap.xml`
+(new URL) were hand-patched instead. Every other existing page in `docs/`
+is untouched. Whoever runs `build.py` next from a machine with BIZ_REPOS
+present should do a full rebuild to reconcile any drift.
+
+PIN NEEDED: pin-beirut-budget.png -> /beirut/beirut-on-a-budget/ (Beirut)
+
 ## 2026-10-26
 Weekly guide: excluding Damascus, Barcelona, Beirut, Berlin, Palermo and
 Vietnam are all tied for fewest published articles (6 each). Chiang Mai has
