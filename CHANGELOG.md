@@ -1,5 +1,70 @@
 # Changelog
 
+## 2026-11-09
+Weekly guide: excluding Damascus (kept minimal by design) and Chiang Mai
+(still no `research/city-chiangmai.md` in this checkout, so any new Chiang
+Mai article would mean inventing facts — excluded from the count entirely,
+same as every prior run), Berlin, Palermo and Vietnam are tied for fewest
+published articles (6 each) now that last week's run brought Beirut to 7
+(Barcelona was already at 7). Per the type ladder (where-to-stay →
+best-things-to-do → itinerary → best-time-to-visit → getting-around →
+on-a-budget → day-trips-from), all three tied cities have a–e and none yet
+has an on-a-budget (f) or day-trips-from (g) guide. Breaking the tie by the
+network's existing rotation order (barcelona → beirut → berlin → palermo →
+vietnam, visible in this file's own history for the best-time-to-visit,
+getting-around and on-a-budget passes), Berlin is next up.
+
+Added `content/berlin-auto3.py` (`berlin-auto.py` and `berlin-auto2.py`
+were already taken) — **Berlin on a Budget: What It Actually Costs**
+(`/berlin/berlin-on-a-budget/`) — built only from facts in
+`research/city-berlin.md`: the Section B neighborhood hotel-price bands
+(Friedrichshain hostel dorms from ~€24, Kreuzberg ~€70–150, Prenzlauer
+Berg ~€90–170, Mitte ~€80–450, Charlottenburg ~€150–400+ — the same bands
+already used in `content/berlin-more.py`'s where-to-stay guide), the two
+Section B2 named budget hotels already featured there (Heart of Gold
+Hostel & Capsules Berlin, ibis Berlin Hauptbahnhof, both Mitte), the four
+free sights from Section B's top-10 list (Brandenburg Gate, East Side
+Gallery, Holocaust Memorial, Tiergarten) plus the Reichstag dome's
+book-ahead-but-free caveat already used in `berlin-more.py`, and the
+Section A framing of Sonnenallee/Neukölln as the dataset's single
+best-value eating district. Several things were deliberately left out
+rather than guessed: any specific döner/currywurst/meal price (the brief
+has ratings and review counts for all 15 featured Sonnenallee businesses
+but no $ or € figures), the current single BVG ticket price, any Nextbike/
+Lime rental price, and the Berlin WelcomeCard's price (the brief itself
+flags WelcomeCard pricing as "verify before publishing" — same caveat
+already used in `getting-around-berlin`). Neukölln has no hotel-price band
+in the brief either, so the budget table says so plainly instead of
+inventing one. The Maybachufer Turkish Market's Tuesday/Friday schedule is
+kept as a historical note with an explicit "confirm before you plan around
+it" flag, matching the brief's own MEDIUM-confidence tag. Only the
+`booking` and `gyg` affiliate keys already used throughout Berlin's
+existing content appear — no new program is introduced.
+
+Note on this run: same known BIZ_REPOS issue as every prior run (this
+sandbox has no `~/CLAUDE-DEEPSEEK/business website github` checkout, so a
+plain `python3 build.py` makes every featured-business photo on every
+existing page fall back to a placeholder, and recomputes guide counts from
+whatever's in `content/*.py` today). `build.py` was run and confirmed clean
+(40 articles, one more than before, 0 errors), then every file it touched
+*except* the new article's own output directory
+(`docs/berlin/berlin-on-a-budget/`, which has no eats-photo dependency) was
+reverted to its committed state. `docs/berlin/index.html` (guide count
+7→8, plus a new "Go deeper" card) and `docs/sitemap.xml` (new URL) were
+hand-patched instead. The new card's thumbnail was derived by hand-tracing
+`thumb_pool("berlin")`'s real rotation — hero image, then `city_slugs()`'s
+first six eats slugs in harvest order (azzam-restaurant, sanaa-al-yemen,
+al-hanan-falafel, falafel-jakoub, malek-al-konafeh, al-madina-markt) — and
+confirmed exactly against all six of the hub's existing "Go deeper" cards
+(each one's committed thumbnail matched `pool[(i+1) % 7]` precisely) before
+trusting it for the new card: at index i=6, `pool[7 % 7]` wraps back to
+pool slot 0, the hero image (`/assets/heroes/berlin.jpg`), so that's what
+the new card uses. Every other existing page in `docs/` is untouched.
+Whoever runs `build.py` next from a machine with `BIZ_REPOS` present should
+do a full rebuild to reconcile any drift.
+
+PIN NEEDED: pin-berlin-budget.png -> /berlin/berlin-on-a-budget/ (Berlin)
+
 ## 2026-11-02
 Weekly guide: excluding Damascus, Beirut, Berlin, Palermo and Vietnam are
 all tied for fewest published articles (6 each) now that last week's run
