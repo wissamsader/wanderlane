@@ -1,5 +1,72 @@
 # Changelog
 
+## 2026-11-16
+Weekly guide: excluding Damascus (kept minimal by design) and Chiang Mai
+(still no `research/city-chiangmai.md` in this checkout, so any new Chiang
+Mai article would mean inventing facts — excluded from the count entirely,
+same as every prior run), Palermo and Vietnam are tied for fewest
+published articles (6 each) now that last week's run brought Berlin to 7.
+Per the type ladder (where-to-stay → best-things-to-do → itinerary →
+best-time-to-visit → getting-around → on-a-budget → day-trips-from), both
+tied cities have a–e and neither yet has an on-a-budget (f) or
+day-trips-from (g) guide. Breaking the tie by the network's existing
+rotation order (barcelona → beirut → berlin → palermo → vietnam, visible
+in this file's own history for the best-time-to-visit, getting-around and
+on-a-budget passes), Palermo is next up.
+
+Added `content/palermo-auto3.py` (`palermo-auto.py` and `palermo-auto2.py`
+were already taken) — **Palermo on a Budget: What It Actually Costs**
+(`/palermo/palermo-on-a-budget/`) — built only from facts in
+`research/city-palermo.md`: the Section A2 per-dish prices already
+transcribed from each business's own menu board (arancina €1.50 at
+Antonello/Il Rosticciere, pane e panelle €1.50–3 at Friggitoria Chiluzzo,
+sfincione €7 at Villena, pasta con le cozze €14 at Sicily Street Food,
+grilled calamaro €9/caponata €3 at Trattoria Al Sorriso, the "Pranzo
+Operaio" €3–5/€10 at Trattoria da Pino, the €27 "Acquario" platter at
+Carizzi d'amuri), the Section B2 hotel bands already used in
+`content/palermo-more.py`'s where-to-stay guide (A Casa di Amici €25–90,
+Skyline Boutique Hotel €60–100, plus the Massimo Plaza/Palazzo Cartari
+bands referenced as the "past €100" tier), the Section B5 ~€4 24-hour
+AMAT bus ticket and free Centro Storico loop bus, and the Section B1/B3
+free sights (the three markets, Quattro Canti, Mondello beach, the
+Kalsa's palazzi streets). The existing "don't rent a car" warning already
+used in `getting-around-palermo` is reused rather than restated
+differently. Several things were deliberately left out rather than
+guessed: pani ca meusa/cannoli/granita prices (the brief has no $ or €
+figures for any of them), the current Prestia e Comandè shuttle fare and
+Punta Raisi airport-train fare, any Cathedral/Palatine Chapel/Teatro
+Massimo/Capuchin Catacombs ticket price, and a literal "cheapest month"
+claim (the brief's Section B6 gives a climate-and-crowds case for
+April–June/September–October but no seasonal pricing data) — all flagged
+honestly in the text instead of invented. Only the `booking` affiliate
+key already used throughout Palermo's existing content appears — no new
+program is introduced.
+
+Note on this run: same known BIZ_REPOS issue as every prior run (this
+sandbox has no `~/CLAUDE-DEEPSEEK/business website github` checkout, so a
+plain `python3 build.py` makes every featured-business photo on every
+existing page fall back to a placeholder, and recomputes guide counts
+from whatever's in `content/*.py` today). `build.py` was run and
+confirmed clean (41 articles, one more than before, 0 errors), then every
+file it touched *except* the new article's own output directory
+(`docs/palermo/palermo-on-a-budget/`, which has no eats-photo dependency)
+was reverted to its committed state. `docs/palermo/index.html` (guide
+count 7→8, plus a new "Go deeper" card) and `docs/sitemap.xml` (new URL)
+were hand-patched instead. The new card's thumbnail was derived by
+hand-tracing `thumb_pool("palermo")`'s real rotation — hero image, then
+`city_slugs()`'s first six eats slugs in harvest order (osteria-mercede,
+mamma-lina, antonello-arancine, sicily-street-food, friggitoria-chiluzzo,
+trattoria-al-sorriso) — and confirmed exactly against all six of the
+hub's existing "Go deeper" cards (each one's committed thumbnail matched
+`pool[(i+1) % 7]` precisely) before trusting it for the new card: at
+index i=6, `pool[7 % 7]` wraps back to pool slot 0, the hero image
+(`/assets/heroes/palermo.jpg`), so that's what the new card uses. Every
+other existing page in `docs/` is untouched. Whoever runs `build.py` next
+from a machine with `BIZ_REPOS` present should do a full rebuild to
+reconcile any drift.
+
+PIN NEEDED: pin-palermo-budget.png -> /palermo/palermo-on-a-budget/ (Palermo)
+
 ## 2026-11-09
 Weekly guide: excluding Damascus (kept minimal by design) and Chiang Mai
 (still no `research/city-chiangmai.md` in this checkout, so any new Chiang
